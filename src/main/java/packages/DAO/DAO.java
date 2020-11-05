@@ -4,25 +4,30 @@ import packages.businessLayer.User;
 import packages.database.DBConnection;
 
 import java.sql.*;
-import java.util.Date;
 
 //the direct access object that performs the CRUD operations
 //a table for posts exists in the database with the columns: (postID, userID, text, attachmentSource, date, tags)
 //a table for users exists in the database with the columns: (userID, username, password)
 public class DAO {
     //insert user into user database table
-    public boolean insert(User user) {
-        Connection connection = DBConnection.getConnection();
+    public boolean insert(User user) throws ClassNotFoundException {
+//        String query = "INSERT INTO users (1, 'username', password, 'email') VALUES (?, ?, ?)";
+        String query = "INSERT INTO users" + " (userID, username, password,email) VALUES " + " (3,?,?,?);";
+//        int result = 0;
+        boolean result;
+        Class.forName("com.mysql.jdbc.Driver");
+//        Connection connection = DBConnection.getConnection();
 
-        try {
-            String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/messageboard?user=root", "root", "1234");
+             PreparedStatement ps = connection.prepareStatement(query)) {
+//            String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
 
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+//            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1,user.getUsername());
+            ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getEmail());
-
+            System.out.println(ps);
             int i = ps.executeUpdate();
 
             if(i == 1) {
@@ -30,28 +35,54 @@ public class DAO {
                     if (generatedKeys.next()) {
                         System.out.println(generatedKeys.getInt(1));
                         System.out.println("Inserted User in User table successful!");
-                    }
-                    else {
+                    } else {
                         throw new SQLException("Inserting user failed");
                     }
                 }
-
                 retrieveUserID(user);
                 return true;
             }
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
         return false;
     }
+
+/*
+        int i = ps.executeUpdate();
+
+        if(i == 1) {
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    System.out.println(generatedKeys.getInt(1));
+                    System.out.println("Inserted User in User table successful!");
+                }
+                else {
+                    throw new SQLException("Inserting user failed");
+                }
+            }
+
+            retrieveUserID(user);
+            return true;
+        }
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            connection.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+        return false;
+}
+*/
+
+
+
 
     //insert post into post database table
     public boolean insert(Post post) {
@@ -194,7 +225,7 @@ public class DAO {
         return false;    }
 
     //return resultSET. Takes in params in case the search functionality has been used
-        //public Post[] retrievePosts(User user, Date from, Date to, String[] tags) {}
+    //public Post[] retrievePosts(User user, Date from, Date to, String[] tags) {}
     public Post[] retrievePosts() {
         Connection connection = DBConnection.getConnection();
         Post[] retrievedPosts = new Post[5];

@@ -1,15 +1,20 @@
 package packages.businessLayer;
 
+// s
 public class User {
     private String username;
     private String password;
     private String email;   //as per requirement 1 in section 4.2 in the assignment
     private int userID;
 
-    public User(String username, String password) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
-        this.email = "test@gmail.com";  //hardcoded email since signing up functionality is not implemented.
+        this.email = email;  //hardcoded email since signing up functionality is not implemented.
+    }
+
+    public User() {
+
     }
 
     public void setUsername(String username) {

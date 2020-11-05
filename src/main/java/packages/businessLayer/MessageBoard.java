@@ -8,12 +8,12 @@ public class MessageBoard {
     private DAO daoObj = new DAO();
 
     //Sign up functionality not to be implemented
-    public void signUp(String username, String password) {
-        User newUser = new User(username, password);
-
-        /*insert into database*/
-        daoObj.insert(newUser);
-    }
+//    public void signUp(String username, String password) {
+//        User newUser = new User(username, password);
+//
+//        /*insert into database*/
+//        daoObj.insert(newUser);
+//    }
 
     //modify account functionality not to be implemented
     public void modifyAccount(User user, String username, String password, String email) {

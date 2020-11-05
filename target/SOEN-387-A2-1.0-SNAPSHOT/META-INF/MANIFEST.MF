@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: alway
-Build-Jdk: 1.8.0_222
+Built-By: febri
+Build-Jdk: 12
 
