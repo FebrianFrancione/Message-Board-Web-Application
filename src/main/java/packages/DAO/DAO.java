@@ -42,6 +42,7 @@ public class DAO {
 //            result = ps.executeUpdate();
 
             //works
+            // will have to be refactorewd to be better - Regex must also be done and the user inpit must exculsively be letters or the db will not update
             String part1;
             part1 = user.getUsername();
             String part2;
