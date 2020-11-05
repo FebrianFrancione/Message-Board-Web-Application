@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 import java.util.Date;
 
 
-@WebServlet(name="MessageBoardServlet")
+@WebServlet(name="/MessageBoardServlet")
 //@WebServlet(name="/register")
 public class MessageBoardServlet extends HttpServlet {
 
@@ -39,9 +40,9 @@ public class MessageBoardServlet extends HttpServlet {
         user.setPassword(password);
         user.setEmail(email);
 
-        try{
-            dao.insert(user);
-        }catch(ClassNotFoundException e){
+        try {
+            dao.insert1(user);
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Userdetails.jsp");

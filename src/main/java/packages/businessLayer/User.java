@@ -1,21 +1,24 @@
 package packages.businessLayer;
 
+import java.io.Serializable;
+
 // s
-public class User {
+public class User{
     private String username;
     private String password;
     private String email;   //as per requirement 1 in section 4.2 in the assignment
     private int userID;
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;  //hardcoded email since signing up functionality is not implemented.
-    }
+//    public User(String username, String password, String email) {
+//        this.username = username;
+//        this.password = password;
+//        this.email = email;  //hardcoded email since signing up functionality is not implemented.
+//    }
+//
 
-    public User() {
-
-    }
+//    public User() {
+//
+//    }
 
     public void setUsername(String username) {
         this.username = username;

@@ -10,10 +10,10 @@ import java.sql.*;
 //a table for users exists in the database with the columns: (userID, username, password)
 public class DAO {
     //insert user into user database table
-    public boolean insert(User user) throws ClassNotFoundException {
+    public int insert1(User user) throws ClassNotFoundException {
 //        String query = "INSERT INTO users (1, 'username', password, 'email') VALUES (?, ?, ?)";
 //        String query = "INSERT INTO users" + " (userID, username, password,email) VALUES " + " (3,'?',?,'?');";
-//        String query = "INSERT INTO userstest(username, password,email) VALUES (?,?,?);";
+//        String query = "INSERT INTO table_name(id, username, password,email) VALUES (5,?,?,?);";
 
         Statement statement = null;
         String url = "jdbc:mysql://localhost:3306/mysql_db2";
@@ -21,7 +21,7 @@ public class DAO {
         String pass = "1234";
 //        String query = "create database testest";
 //        int result = 0;
-        boolean result;
+        int result = 0;
 
         Class.forName("com.mysql.cj.jdbc.Driver");
 //        Connection connection = DBConnection.getConnection();
@@ -29,10 +29,35 @@ public class DAO {
 //             PreparedStatement ps = connection.prepareStatement(query)
 
         ) {
+
             statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO mysql_db2.table_name" +"(id, username, password, email)" + "values(3,'hanna','12345','lee@mail')" );
+//            ps.setString(2, "febnfeb");
+//            ps.setString(3, "china123");
+//            ps.setString(4, "winwinwin");
+//
+////            ps.setInt(1, 5);
+////            ps.setString(2, user.getUsername());
+////            ps.setString(3, user.getPassword());
+////            ps.setString(4, user.getEmail());
+//            result = ps.executeUpdate();
+
+            //works
+            String part1;
+            part1 = user.getUsername();
+            String part2;
+            part2 = user.getPassword();
+            String part3;
+            part3 = user.getEmail();
+//            String part3 = user.getEmail();
+            //works
+//            statement.executeUpdate("INSERT INTO table_name" +"(id, username, password, email)" + "values(6,'herro','1232145','duh')");
+
+
+            result = statement.executeUpdate("INSERT INTO table_name" +"(id, username, password, email)" + "values(11,'"+part1+"','"+part2+"','"+part3+"')");
 //            ResultSet resultSet = statement.executeQuery("INSERT INTO table_name (username, password,email) VALUES (hanna,12345,lee@mail); ");
 //            ResultSet resultSet = statement.executeQuery("INSERT INTO table_name" +"(username, password, email)" + "values('hanna','12345','lee@mail')" );
+
+
 
 //            while(resultSet.next()){
 //                int id = resultSet.getInt(1);
@@ -44,9 +69,8 @@ public class DAO {
 
 //            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-//            ps.setString(1, user.getUsername());
-//            ps.setString(2, user.getPassword());
-//            ps.setString(3, user.getEmail());
+
+
 //            System.out.println(ps);
 //            int i = ps.executeUpdate();
 //
@@ -66,7 +90,7 @@ public class DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
     }
 
 /*
