@@ -12,36 +12,56 @@ public class DAO {
     //insert user into user database table
     public boolean insert(User user) throws ClassNotFoundException {
 //        String query = "INSERT INTO users (1, 'username', password, 'email') VALUES (?, ?, ?)";
-        String query = "INSERT INTO users" + " (userID, username, password,email) VALUES " + " (3,?,?,?);";
+//        String query = "INSERT INTO users" + " (userID, username, password,email) VALUES " + " (3,'?',?,'?');";
+//        String query = "INSERT INTO userstest(username, password,email) VALUES (?,?,?);";
+
+        Statement statement = null;
+        String url = "jdbc:mysql://localhost:3306/mysql_db2";
+        String userT = "root";
+        String pass = "1234";
+//        String query = "create database testest";
 //        int result = 0;
         boolean result;
-        Class.forName("com.mysql.jdbc.Driver");
-//        Connection connection = DBConnection.getConnection();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/messageboard?user=root", "root", "1234");
-             PreparedStatement ps = connection.prepareStatement(query)) {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+//        Connection connection = DBConnection.getConnection();
+        try (Connection connection = DriverManager.getConnection(url, userT, pass);
+//             PreparedStatement ps = connection.prepareStatement(query)
+
+        ) {
+            statement = connection.createStatement();
+            statement.executeUpdate("INSERT INTO mysql_db2.table_name" +"(id, username, password, email)" + "values(3,'hanna','12345','lee@mail')" );
+//            ResultSet resultSet = statement.executeQuery("INSERT INTO table_name (username, password,email) VALUES (hanna,12345,lee@mail); ");
+//            ResultSet resultSet = statement.executeQuery("INSERT INTO table_name" +"(username, password, email)" + "values('hanna','12345','lee@mail')" );
+
+//            while(resultSet.next()){
+//                int id = resultSet.getInt(1);
+//                String name = resultSet.getString(2);
+//                System.out.println(id + " " + name);
+//            }
+
 //            String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
 
 //            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getEmail());
-            System.out.println(ps);
-            int i = ps.executeUpdate();
-
-            if(i == 1) {
-                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        System.out.println(generatedKeys.getInt(1));
-                        System.out.println("Inserted User in User table successful!");
-                    } else {
-                        throw new SQLException("Inserting user failed");
-                    }
-                }
-                retrieveUserID(user);
-                return true;
-            }
+//            ps.setString(1, user.getUsername());
+//            ps.setString(2, user.getPassword());
+//            ps.setString(3, user.getEmail());
+//            System.out.println(ps);
+//            int i = ps.executeUpdate();
+//
+//            if(i == 1) {
+//                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+//                    if (generatedKeys.next()) {
+//                        System.out.println(generatedKeys.getInt(1));
+//                        System.out.println("Inserted User in User table successful!");
+//                    } else {
+//                        throw new SQLException("Inserting user failed");
+//                    }
+//                }
+//                retrieveUserID(user);
+//                return true;
+//            }
 
         } catch (SQLException e) {
             e.printStackTrace();
