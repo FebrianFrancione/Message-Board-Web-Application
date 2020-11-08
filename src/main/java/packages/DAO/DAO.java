@@ -279,4 +279,35 @@ public class DAO {
             }
         }
     }
+
+    public User verifyPassword(User user){
+        Connection connection = DBConnection.getConnection();
+        String password = user.getPassword();
+        String username = user.getUsername();
+        User returnUser = null;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT userID, email FROM users WHERE username = '" +username + "' AND password = '" + password + "';" );
+
+            String ans;
+            if(rs.next())
+            {
+                returnUser = new User(username,password);
+                returnUser.setUserID(rs.getInt("userID"));
+                returnUser.setEmail(rs.getNString("email"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                return returnUser;
+            } catch(SQLException e){
+                e.printStackTrace();
+                return returnUser;
+            }
+        }
+
+    }
 }

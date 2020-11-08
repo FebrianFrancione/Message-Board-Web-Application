@@ -1,7 +1,13 @@
 package packages.businessLayer;
 
 import packages.DAO.DAO;
+
+import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+
 
 public class MessageBoard {
     //Our Data Access Object, this is responsible inserting, updating, deleting, retrieving from the database
@@ -102,5 +108,29 @@ public class MessageBoard {
 
             System.out.println();
         }
+    }
+
+    public int verifyUser(String username, String password){
+
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        //hashing the user given password
+        byte[] encodedhash = digest.digest(password.getBytes());
+
+        //converting byte array to String of hex
+        String hashedpass = DatatypeConverter.printHexBinary(encodedhash);
+        User temp = new User(username,hashedpass);
+
+        User returned = daoObj.verifyPassword(temp);
+
+        if (returned != null){
+            return returned.getUserID();
+        }
+        return -1;
     }
 }

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 
@@ -22,6 +25,20 @@ public class MessageBoardServlet extends HttpServlet {
 
         // the message board object is our business layer object that is responsible for manipulating the data
         MessageBoard msgBoard = new MessageBoard();
+
+        String action = request.getParameter("action");
+
+        if(action != null && action.equalsIgnoreCase("login")){
+            String username =  request.getParameter("username");
+            String password = request.getParameter("password");
+
+            int userID = msgBoard.verifyUser(username,password);
+            if(userID != -1) {
+                request.getSession().setAttribute("userID",userID);
+            }
+
+
+        }
 
         //press on the create button to test out the different methods.
 
@@ -49,7 +66,7 @@ public class MessageBoardServlet extends HttpServlet {
         post7.setPostID(7);
 
         //1. Creating a post
-            //msgBoard.createPost(user1, "new post", "new attachment path", "#new");
+            msgBoard.createPost(user1, "new post", "new attachment path", "#new");
 
         //2. Delete a post
             //msgBoard.deletePost(user3, post7);
