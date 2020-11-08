@@ -12,7 +12,16 @@
         <servlet-name>MessageBoardServlet</servlet-name>
         <url-pattern>/MessageBoardServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>loginServlet</servlet-name>
+        <servlet-class>loginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>loginServlet</servlet-name>
+        <url-pattern>/loginServlet</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
-        <welcome-file>Main.html</welcome-file>
+        <welcome-file>main.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

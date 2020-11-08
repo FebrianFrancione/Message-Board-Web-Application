@@ -8,11 +8,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
-
 public class MessageBoard {
     //Our Data Access Object, this is responsible inserting, updating, deleting, retrieving from the database
     private DAO daoObj = new DAO();
 
+
+//    public void checkUserID(String username,String password){
+//        daoObj.retrieveUserID(username,password);
+//    }
     //Sign up functionality not to be implemented
     public void signUp(String username, String password) {
         User newUser = new User(username, password);
@@ -110,27 +113,27 @@ public class MessageBoard {
         }
     }
 
-    public int verifyUser(String username, String password){
-
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        //hashing the user given password
-        byte[] encodedhash = digest.digest(password.getBytes());
-
-        //converting byte array to String of hex
-        String hashedpass = DatatypeConverter.printHexBinary(encodedhash);
-        User temp = new User(username,hashedpass);
-
-        User returned = daoObj.verifyPassword(temp);
-
-        if (returned != null){
-            return returned.getUserID();
-        }
-        return -1;
-    }
+//    public int verifyUser(String username, String password){
+//
+//        MessageDigest digest = null;
+//        try {
+//            digest = MessageDigest.getInstance("SHA-256");
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //hashing the user given password
+//        byte[] encodedhash = digest.digest(password.getBytes());
+//
+//        //converting byte array to String of hex
+//        String hashedpass = DatatypeConverter.printHexBinary(encodedhash);
+////        User temp = new User(username,hashedpass);
+//
+//        User returned = daoObj.verifyPassword(temp);
+//
+//        if (returned != null){
+//            return returned.getUserID();
+//        }
+//        return -1;
+//    }
 }
