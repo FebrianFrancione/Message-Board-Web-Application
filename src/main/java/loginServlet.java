@@ -1,3 +1,5 @@
+import packages.businessLayer.MessageBoard;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +15,9 @@ public class loginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if(this.username.equals(username) && this.password.equals(password)){
+        MessageBoard mObj = new MessageBoard();
+        int userID = mObj.verifyUser(username,password);
+        if(userID != -1){
             HttpSession oldSession = request.getSession(false);
             if (oldSession != null) {
                 oldSession.invalidate();
@@ -24,6 +28,7 @@ public class loginServlet extends HttpServlet {
             //setting session to expiry in 5 mins
             newSession.setMaxInactiveInterval(5*60);
 
+            newSession.setAttribute("userID",userID);
             Cookie message = new Cookie("message", "Welcome");
             response.addCookie(message);
             response.sendRedirect("loginSuccess.jsp");

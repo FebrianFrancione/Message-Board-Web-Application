@@ -47,7 +47,7 @@ public class MessageBoardServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         // enter new user
-        msgBoard.signUp(username,password,email);
+        msgBoard.signUp(username,password);
 
 //        int userID = msgBoard.signUp(username,password,email);
 //        if(userID != -1){
