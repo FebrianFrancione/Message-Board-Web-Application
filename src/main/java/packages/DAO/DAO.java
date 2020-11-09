@@ -1,3 +1,4 @@
+
 package packages.DAO;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
@@ -194,7 +195,7 @@ public class DAO {
         return false;    }
 
     //return resultSET. Takes in params in case the search functionality has been used
-        //public Post[] retrievePosts(User user, Date from, Date to, String[] tags) {}
+    //public Post[] retrievePosts(User user, Date from, Date to, String[] tags) {}
     public Post[] retrievePosts() {
         Connection connection = DBConnection.getConnection();
         Post[] retrievedPosts = new Post[5];

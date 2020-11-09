@@ -79,18 +79,18 @@ public class MessageBoard {
 //        }
 //    }
 
-    public void updatePost(User user, Post post, String text ,String att, String tags) {
-        if (user.getUserID() == post.getUserID()) {
-            post.setText(text);
-            post.setAttachment(att);
-            post.setTags(tags.split(" "));
-            post.setUpdated(true);
-
-            daoObj.update(post);
-        }else {
-            /*display error*/
-        }
-    }
+//    public void updatePost(User user, Post post, String text ,String att, String tags) {
+//        if (user.getUserID() == post.getUserID()) {
+//            post.setText(text);
+//            post.setAttachment(att);
+//            post.setTags(tags.split(" "));
+//            post.setUpdated(true);
+//
+//            daoObj.update(post);
+//        }else {
+//            /*display error*/
+//        }
+//    }
 
     public void search(User user, Date from, Date to, String[] tags) {
         /*retrieve an array from database*/
