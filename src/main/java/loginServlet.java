@@ -29,11 +29,13 @@ public class loginServlet extends HttpServlet {
             newSession.setMaxInactiveInterval(5*60);
 
             newSession.setAttribute("userID",userID);
+            //
+            request.getSession().setAttribute("loggedInUser", userID);
             Cookie message = new Cookie("message", "Welcome");
             response.addCookie(message);
-            response.sendRedirect("loginSuccess.jsp");
+            response.sendRedirect("admin/loggedIn.jsp");
         }else {
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/main.jsp");
             PrintWriter out = response.getWriter();
             out.println("<font color=red>Either username or password is wrong.</font>");
             rd.include(request, response);

@@ -83,7 +83,6 @@ public class MessageBoardServlet extends HttpServlet {
 //        post7.setPostID(7);
 
         //1. Creating a post
-
         User user1 = new User("febrian", "controller");
         user1.getUserID();
 //        msgBoard.createPost(user1, "new post", "new attachment path", "#new");
