@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,8 +27,26 @@ public class MessageBoardServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // the message board object is our business layer object that is responsible for manipulating the data
-        MessageBoard msgBoard = new MessageBoard();
+        Integer userID = (Integer) request.getSession().getAttribute("userID");
+
+        //if we have an active session and userID is set
+        if(userID != null){
+            String msg = request.getParameter("message");
+            // the message board object is our business layer object that is responsible for manipulating the data
+            MessageBoard msgBoard = new MessageBoard();
+
+            msgBoard.createPost(userID,msg,"","");
+
+            //redirect to main
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/main.jsp");
+            rd.include(request, response);
+
+        }else{
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
+        }
+
+
 
         String action = request.getParameter("action");
 
@@ -47,7 +66,7 @@ public class MessageBoardServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         // enter new user
-        msgBoard.signUp(username,password);
+        //msgBoard.signUp(username,password);
 
 //        int userID = msgBoard.signUp(username,password,email);
 //        if(userID != -1){

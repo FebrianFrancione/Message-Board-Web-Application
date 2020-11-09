@@ -34,11 +34,11 @@ public class MessageBoard {
         daoObj.update(user);
     }
 
-    public void createPost(User user, String text, String att, String tags) {
+    public void createPost(int userID, String text, String att, String tags) {
         Date date = new Date();
         String[] tagsArray = tags.split(" ");
 
-        Post post = new Post(user.getUserID(), text, att, date, tagsArray);
+        Post post = new Post(userID, text, att, date, tagsArray);
 
         daoObj.insert(post);
     }
@@ -136,4 +136,5 @@ public class MessageBoard {
         }
         return -1;
     }
+
 }
