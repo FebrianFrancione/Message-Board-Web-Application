@@ -20,6 +20,8 @@
 <section>
     <h1>Chat area</h1>
     <form action="MessageBoardServlet" method="POST">
+        <input type="text" name="message">
+        <input type="file" name="attachment" value="Add attachment"> <br><br>
         <input type="submit" name="create-post" value="Create">
         <button type="button">Delete Post!</button>
         <button type="button">Update Post!</button>

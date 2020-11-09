@@ -31,7 +31,7 @@ public class loginServlet extends HttpServlet {
             newSession.setAttribute("userID",userID);
             Cookie message = new Cookie("message", "Welcome");
             response.addCookie(message);
-            response.sendRedirect("loginSuccess.jsp");
+            response.sendRedirect("main.jsp");
         }else {
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
             PrintWriter out = response.getWriter();
