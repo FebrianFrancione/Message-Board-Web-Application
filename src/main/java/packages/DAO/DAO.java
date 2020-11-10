@@ -5,6 +5,7 @@ import packages.businessLayer.User;
 import packages.database.DBConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 //the direct access object that performs the CRUD operations
@@ -133,19 +134,19 @@ public class DAO {
     }
 
     //update post in the post table.
-    public boolean update(Post post) {
+    public boolean update(int userID, int postID, String text) {
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET text=?, attachmentSource=?, date=?, tags=? WHERE postID=" + post.getPostID());
+            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET text=? WHERE postID=" + postID + " AND userID=" + userID);
 
-            ps.setString(1, post.getText());
-            ps.setString(2, post.getAttachment());
+            ps.setString(1, text);
+            //ps.setString(2, post.getAttachment());
 
-            java.sql.Date sqlDate = new java.sql.Date(post.getDate().getTime());
+            //java.sql.Date sqlDate = new java.sql.Date(post.getDate().getTime());
 
-            ps.setDate(3, sqlDate);
-            ps.setString(4, post.getTags());
+            //ps.setDate(3, sqlDate);
+            //ps.setString(4, post.getTags());
 
             int i = ps.executeUpdate();
 
@@ -153,7 +154,7 @@ public class DAO {
                 System.out.println("updated post successfully");
                 return true;
             }else {
-                System.out.println("updated post unsuccessfully");
+                System.out.println("Not authorized to update post");
             }
 
         } catch (SQLException ex) {
@@ -165,21 +166,22 @@ public class DAO {
                 e.printStackTrace();
             }
         }
-
         return false;
     }
 
     //delete a post from the post table.
-    public boolean delete(Post post) {
+    public boolean delete(int userID, int postID) {
         Connection connection = DBConnection.getConnection();
 
         try {
             Statement stmt = connection.createStatement();
-            int i = stmt.executeUpdate("DELETE FROM posts WHERE postID=" + post.getPostID());
+            int i = stmt.executeUpdate("DELETE FROM posts WHERE postID=" + postID + " AND userID=" + userID);
 
             if(i == 1) {
                 System.out.println("deleted post successfully");
                 return true;
+            }else {
+                System.out.println("Not authorized to delete post");
             }
 
         } catch (SQLException ex) {
@@ -196,29 +198,28 @@ public class DAO {
 
     //return resultSET. Takes in params in case the search functionality has been used
     //public Post[] retrievePosts(User user, Date from, Date to, String[] tags) {}
-    public Post[] retrievePosts() {
+    public ArrayList<Post> retrievePosts() {
         Connection connection = DBConnection.getConnection();
-        Post[] retrievedPosts = new Post[5];
+        ArrayList<Post> retrievedPosts = new ArrayList<Post>();
         int index = 0;
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM posts");
 
             while(rs.next()) {
-                if (index == 5)
-                    break;
-
-//                retrievedPosts[index] = new Post(0, null, null, null, null);
-                retrievedPosts[index].setPostID(rs.getInt("postID"));
-                retrievedPosts[index].setUserID(rs.getInt("userID"));
-                retrievedPosts[index].setText(rs.getString("text"));
-                retrievedPosts[index].setAttachment(rs.getString("attachmentSource"));
-
-                java.util.Date utilDate = new java.util.Date(rs.getDate("date").getTime());
-
-                retrievedPosts[index].setDate(utilDate);
-                retrievedPosts[index].setTags(rs.getString("tags").split(" "));
-                index++;
+                Post post = new Post(rs.getInt("userID"), rs.getString("text"), rs.getString("attachmentSource"), new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags").split(" "));
+                post.setPostID(rs.getInt("postID"));
+                retrievedPosts.add(post);
+                //                retrievedPosts[index].setPostID(rs.getInt("postID"));
+//                retrievedPosts[index].setUserID(rs.getInt("userID"));
+//                retrievedPosts[index].setText(rs.getString("text"));
+//                retrievedPosts[index].setAttachment(rs.getString("attachmentSource"));
+//
+//                java.util.Date utilDate = new java.util.Date(rs.getDate("date").getTime());
+//
+//                retrievedPosts[index].setDate(utilDate);
+//                retrievedPosts[index].setTags(rs.getString("tags").split(" "));
+                //index++;
             }
 
         } catch (SQLException e) {
@@ -257,6 +258,29 @@ public class DAO {
         }
     }
 
+    public String retrieveUsername (int userID) {
+        Connection connection = DBConnection.getConnection();
+        String username = "";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT username FROM users WHERE userID=" + userID);
+
+            if(rs.next())
+            {
+                username = rs.getString("username");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return username;
+    }
 
 //    public void retrieveUserID (User user) {
 //        Connection connection = DBConnection.getConnection();

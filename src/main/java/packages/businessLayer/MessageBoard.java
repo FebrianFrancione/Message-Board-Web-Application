@@ -6,6 +6,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageBoard {
@@ -43,28 +44,13 @@ public class MessageBoard {
         daoObj.insert(post);
     }
 
-    public void deletePost(User user, Post post) {
-        if (user.getUserID() == post.getUserID()) {
-            /*remove post from database*/
-            daoObj.delete(post);
-
-        }else {
-            /*display error*/
-        }
+    public void deletePost(int userID, int postID) {
+        daoObj.delete(userID ,postID);
     }
 
-//    public void updatePost(User user, Post post, String text) {
-//        /*retrieve post from database*/
-//
-//        if (user.getUsername() == post.getUser().getUsername()) {
-//            post.setText(text);
-//            post.setUpdated(true);
-//            /*insert into database*/
-//            displayRecent();
-//        }else {
-//            /*display error*/
-//        }
-//    }
+    public void updatePost(int userID, int postID, String text) {
+        daoObj.update(userID, postID, text);
+    }
 //
 //    public void updatePost(User user, Post post, String att) {
 //        /*retrieve post from database*/
@@ -100,17 +86,23 @@ public class MessageBoard {
         /*retreive posts in-order from database*/
     }
 
-    public void display() {
-        for (Post post: daoObj.retrievePosts()) {
-            System.out.print(post.getPostID() + " ");
-            System.out.print(post.getUserID() + " ");
-            System.out.print(post.getText() + " ");
-            System.out.print(post.getAttachment() + " ");
-            System.out.print(post.getDate().toString() + " ");
-            System.out.print(post.getTags() + " ");
+    public String display() {
+        String out = "";
+        ArrayList<Post> postsList = daoObj.retrievePosts();
 
-            System.out.println();
+        for (Post post: postsList) {
+            out += "<div class=\"post\" id=" + post.getUserID() + "><h5 id=" + post.getPostID() + ">" + post.getPostID() + "</h5><h4>" + daoObj.retrieveUsername(post.getUserID()) + "</h4><div class=\"post-body\">" + post.getText() + "</div><div class=\"post-date\">" + post.getDate().toString() + "</div><div class=\"post-tags\">" + post.getTags() + "</div></div>";
         }
+        return out;
+    }
+
+
+    public ArrayList<Integer> retrievePostIDs() {
+        ArrayList<Integer> IDs = new ArrayList<Integer>();
+        for (Post post: daoObj.retrievePosts()) {
+            IDs.add(post.getPostID());
+        }
+        return IDs;
     }
 
     public int verifyUser(String username, String password){
@@ -136,5 +128,4 @@ public class MessageBoard {
         }
         return -1;
     }
-
 }

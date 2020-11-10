@@ -33,7 +33,7 @@ public class loginServlet extends HttpServlet {
             request.getSession().setAttribute("loggedInUser", userID);
             Cookie message = new Cookie("message", "Welcome");
             response.addCookie(message);
-            response.sendRedirect("admin/loggedIn.jsp");
+            response.sendRedirect("loggedIn.jsp");
         }else {
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/main.jsp");
             PrintWriter out = response.getWriter();
