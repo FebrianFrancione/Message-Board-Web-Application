@@ -14,7 +14,7 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = 16177215) // upload file size up yto 16MB
 public class UploadServlet extends HttpServlet {
 
-    // database connection settings
+    // database connection settings this needs use the dbconnection file
     private String dbURL = "jdbc:mysql://localhost:3306/messageboard";
     private String dbUser = "root";
     private String dbPass = "1234";
