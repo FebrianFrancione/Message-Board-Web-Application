@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="./style.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>
 <body>
 <%

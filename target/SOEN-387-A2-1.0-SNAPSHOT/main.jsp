@@ -31,6 +31,19 @@
 
         <button type="button">???!</button>
     </form>
+    <br>
+    <hr>
+    <form action="UploadServlet" method="post" enctype="multipart/form-data">
+        <input type="file" required="" name="photo">
+        <input type="submit" value="Save">
+    </form>
+    <%
+        if (request.getAttribute("uploaded_message") != null) {
+    %>
+    <h3><%=request.getAttribute("uploaded_message")%></h3>
+    <%
+        }
+    %>
 </section>
 </body>
 </html>
