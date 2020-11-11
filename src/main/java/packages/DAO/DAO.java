@@ -200,6 +200,7 @@ public class DAO {
                 ps.setString(2, tags);
             } else if (text.length() == 0 && inputStream.available() != 0 && tags.length() == 0) {
                 updateFile(postID, inputStream);
+                return true;
             } else if (text.length() == 0 && inputStream.available() != 0 && tags.length() != 0) {
                 ps = connection.prepareStatement("UPDATE posts SET tags=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, tags);

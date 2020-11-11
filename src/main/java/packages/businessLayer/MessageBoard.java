@@ -16,8 +16,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Base64;
+//import java.util.Base64;
 import java.util.Date;
+import org.apache.commons.codec.binary.Base64;
+
 
 public class MessageBoard {
     //Our Data Access Object, this is responsible inserting, updating, deleting, retrieving from the database
@@ -85,19 +87,11 @@ public class MessageBoard {
                         "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "</div>";
 
             BufferedImage image = null;
-            if (post.getAttachment() != null)
-                image = ImageIO.read(post.getAttachment());
-            if (image != null) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ImageIO.write(image, "png", bos );
-                byte [] data = bos.toByteArray();
-                ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                BufferedImage bImage2 = ImageIO.read(bis);
-                String fileName = "test" + counter +".png";
-                ImageIO.write(bImage2, "png", new File("C:\\Users\\alway\\Desktop\\SOEN 387\\SOEN-387-A2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
-                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div></div>";
-                System.out.println("image created");
-                counter++;
+            if (post.getAttachment() != null) {
+                byte[] imageBytes = new byte[(int)post.getAttachment().available()];
+                post.getAttachment().read(imageBytes, 0, imageBytes.length);
+                String imageString = Base64.encodeBase64String(imageBytes);
+                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"data:image/jpeg;base64, " + imageString + "\"></div></div>";
             }else {
                 out += "</div>";
             }
