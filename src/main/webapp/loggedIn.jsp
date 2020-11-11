@@ -92,7 +92,7 @@
 
         <hr class="solid">
         <label for="updatePost">Search for Post by User:</label>
-        <input type="text" placeholder="Search.." name="search">
+        <input type="text" placeholder="Search.." name="searchUsername">
         <div>
             <span for="updatePost">Search for Post by Date Range:</span>
             <label for="updatePost">From:</label>
@@ -114,6 +114,11 @@
                 <button type="button" id="Reset">Reset</button>
             </div>
         </div>
+
+        <p>Yo</p>
+        <%= msgboard.displaySearched(1)%>
+        <%= msgboard.displayedUserID("u2")%>
+        <p>End</p>
 
         <hr class="solid">
     </form>

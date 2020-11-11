@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -60,9 +61,55 @@ public class MessageBoard {
         daoObj.update(userID, postID, text, inputStream, tags);
     }
 
-    public void search(User user, Date from, Date to, String[] tags) {
-        /*retrieve an array from database*/
+//    public void search(User user, Date from, Date to, String[] tags) {
+//        /*retrieve an array from database*/
+//    }
+
+    public String displaySearched(int userID) throws IOException{
+        String out = "";
+        ArrayList<Post> searchedPosts = daoObj.searchPosts(userID);
+        ArrayList<Post> searchPostsFiles = daoObj.retrieveFiles(searchedPosts);
+        int counter = 0;
+        for (Post post: searchPostsFiles) {
+            out += "" +
+                    "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
+                    "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
+                    "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                    "<div>Post id: " + post.getPostID() + "</div>" +
+                    "</div>"+
+                    "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
+                    "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
+                    "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "</div>";
+
+            BufferedImage image = null;
+            if (post.getAttachment() != null)
+                image = ImageIO.read(post.getAttachment());
+            if (image != null) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", bos );
+                byte [] data = bos.toByteArray();
+                ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                BufferedImage bImage2 = ImageIO.read(bis);
+                String fileName = "test" + counter +".png";
+                ImageIO.write(bImage2, "png", new File("C:\\Users\\Bahenduzi\\OneDrive - Concordia University - Canada\\Concordia\\FALL 2020\\SOEN387\\Assignments\\A2\\A2-2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
+                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div></div>";
+                System.out.println("image created");
+                counter++;
+            }else {
+                out += "</div>";
+            }
+        }
+        return out;
     }
+
+    public String displayedUserID(String username) throws IOException{
+        String out = "";
+        int userID = daoObj.littleMethod(username);
+        out += "" + "<div>"+userID+"</div>";
+
+        return out;
+    }
+
 
     public void displayRecent() {
         /*retreive posts in-order from database*/
@@ -94,7 +141,7 @@ public class MessageBoard {
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
                 BufferedImage bImage2 = ImageIO.read(bis);
                 String fileName = "test" + counter +".png";
-                ImageIO.write(bImage2, "png", new File("C:\\Users\\alway\\Desktop\\SOEN 387\\SOEN-387-A2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
+                ImageIO.write(bImage2, "png", new File("C:\\Users\\Bahenduzi\\OneDrive - Concordia University - Canada\\Concordia\\FALL 2020\\SOEN387\\Assignments\\A2\\A2-2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
                 out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div></div>";
                 System.out.println("image created");
                 counter++;

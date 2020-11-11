@@ -1,5 +1,6 @@
 
 package packages.DAO;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
 import packages.database.DBConnection;
@@ -325,7 +326,6 @@ public class DAO {
     }
 
     //retrieve posts from posts table
-
     public ArrayList<Post> retrievePosts() {
         Connection connection = DBConnection.getConnection();
         ArrayList<Post> retrievedPosts = new ArrayList<Post>();
@@ -354,6 +354,83 @@ public class DAO {
             }
         }
         return retrievedPosts;
+    }
+    public int littleMethod (String username){
+
+        int searchedUserID =0;
+        Connection connection = DBConnection.getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username="+username);
+
+            if(query1.next()){
+                searchedUserID = query1.getInt("userID");
+                System.out.print(searchedUserID);
+                return searchedUserID;
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+      return searchedUserID;
+    }
+
+    //retrieve posts from posts table based on a search for user
+    public ArrayList<Post> searchPosts(int userID) {
+
+        int searchedUserID;
+        Connection connection = DBConnection.getConnection();
+        ArrayList<Post> listOfSearchedPosts = new ArrayList<Post>();
+
+
+//        try {
+//            Statement statement = connection.createStatement();
+//            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username=" + username);
+//
+//            if(query1.next()){
+//                searchedUserID = query1.getInt("searchUserID");
+//            }
+//
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//        }finally {
+//            try{
+//                connection.close();
+//            } catch(SQLException e){
+//                e.printStackTrace();
+//            }
+//        }
+        try{
+            Statement statement = connection.createStatement();
+//
+            ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + userID);
+
+            while (query2.next()) {
+
+                Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
+                listOfSearchedPosts.add(userPost);
+            }
+//            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try{
+                connection.close();
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return listOfSearchedPosts;
     }
 
     //retrieve files from files table and bind them to posts
@@ -412,6 +489,7 @@ public class DAO {
         }
     }
 
+    // retrieve the username with userID
     public String retrieveUsername (int userID) {
         Connection connection = DBConnection.getConnection();
         String username = "";
