@@ -45,7 +45,10 @@
 
 
     <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
-        <input type="text" name="message">
+        <label for="message">Enter Text Message</label>
+        <input id="message" type="text" name="message">
+        <label for="tags">Enter #Tags (Separate by space)</label>
+        <input id="tags" type="text" name="tags">
         <input type="file" name="photo" value="Add attachment">
         <input type="submit" name="create" value="Create">
 
@@ -73,10 +76,15 @@
             }
         %>
         </select>
-        <input type="text" name="updatedMessage">
+        <label for="updatedMessage">Enter Desired Message Here</label>
+        <input id="updatedMessage" type="text" name="updatedMessage">
+        <label for="updatedTags">Enter Desired tags here</label>
+        <input id="updatedTags" type="text" name="updatedTags">
         <input type="file" name="updatedAttachment" value="Add attachment">
-        <input type="submit" name="action" value="Update Post"/>
+        <input type="submit" name="update" value="Update Post"/>
+
         <br><br>
+
         <button type="button">View recent Post!</button>
         <button type="button">Download!</button>
         <button type="button">Clear Chat!</button>
