@@ -43,8 +43,9 @@ public class MessageBoardServlet extends HttpServlet {
             if (request.getPart("create") != null) {
                 String text = request.getParameter("message");
                 InputStream inputStream = request.getPart("photo").getInputStream();
+                String tags = request.getParameter("tags");
 
-                msgBoard.createPost(userID,text,inputStream,"");
+                msgBoard.createPost(userID, text, inputStream, tags);
             }
 
             if (request.getPart("delete") != null) {
@@ -52,15 +53,16 @@ public class MessageBoardServlet extends HttpServlet {
                 msgBoard.deletePost(userID, Integer.parseInt(ID));
             }
 
-//            if (request.getPart("update") != null) {
-//                String text = request.getParameter("updatedMessage");
-//                String ID = request.getParameter("updatePost");
-//                InputStream inputStream = request.getPart("updatedAttachment").getInputStream();
-//
-//                msgBoard.updatePost(userID, Integer.parseInt(ID), text);
-//            }
+            if (request.getPart("update") != null) {
+                String text = request.getParameter("updatedMessage");
+                String ID = request.getParameter("updatePost");
+                InputStream inputStream = request.getPart("updatedAttachment").getInputStream();
+                String tags = request.getParameter("updatedTags");
 
-           RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
+                msgBoard.updatePost(userID, Integer.parseInt(ID), text, inputStream, tags);
+            }
+
+            RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
             //response.sendRedirect("loggedIn.jsp");
             rd.forward(request, response);
 

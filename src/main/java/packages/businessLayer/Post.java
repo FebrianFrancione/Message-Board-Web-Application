@@ -11,11 +11,11 @@ public class Post {
     private String text;
     private Date date;
     private boolean updated;
-    private String[] tags;
+    private String tags;
     private int postID;
     private int userID;
 
-    public Post(int userID, String text, InputStream file, Date date, String[] tags) {
+    public Post(int userID, String text, InputStream file, Date date, String tags) {
         this.userID = userID;
         this.text = text;
         this.attachment = file;
@@ -68,15 +68,11 @@ public class Post {
         return this.postID;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 
     public String getTags() {
-        String temp = "";
-        for (String el: this.tags) {
-            temp += el + " ";
-        }
-        return temp;
+        return this.tags;
     }
 }

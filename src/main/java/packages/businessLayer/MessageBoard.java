@@ -14,6 +14,7 @@ import java.nio.file.FileSystems;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -44,48 +45,20 @@ public class MessageBoard {
         daoObj.update(user);
     }
 
-    public void createPost(int userID, String text, InputStream att, String tags) {
-        Date date = new Date();
-        String[] tagsArray = tags.split(" ");
-
-        Post post = new Post(userID, text, att, date, tagsArray);
+    public void createPost(int userID, String text, InputStream att, String tags) throws IOException {
+        Date date = new Timestamp(System.currentTimeMillis());
+        Post post = new Post(userID, text, att, date, tags);
 
         daoObj.insert(post);
     }
 
     public void deletePost(int userID, int postID) {
-        daoObj.delete(userID ,postID);
+        daoObj.deletePost(userID ,postID);
     }
 
-    public void updatePost(int userID, int postID, String text) {
-        daoObj.update(userID, postID, text);
+    public void updatePost(int userID, int postID, String text, InputStream inputStream, String tags) {
+        daoObj.update(userID, postID, text, inputStream, tags);
     }
-//
-//    public void updatePost(User user, Post post, String att) {
-//        /*retrieve post from database*/
-//
-//        if (user.getUsername() == post.getUser().getUsername()) {
-//            post.setAttachment(att);
-//            post.setUpdated(true);
-//            /*insert into database*/
-//            displayRecent();
-//        }else {
-//            /*display error*/
-//        }
-//    }
-
-//    public void updatePost(User user, Post post, String text ,String att, String tags) {
-//        if (user.getUserID() == post.getUserID()) {
-//            post.setText(text);
-//            post.setAttachment(att);
-//            post.setTags(tags.split(" "));
-//            post.setUpdated(true);
-//
-//            daoObj.update(post);
-//        }else {
-//            /*display error*/
-//        }
-//    }
 
     public void search(User user, Date from, Date to, String[] tags) {
         /*retrieve an array from database*/
@@ -97,12 +70,23 @@ public class MessageBoard {
 
     public String display() throws IOException {
         String out = "";
-        ArrayList<Post> postsList = daoObj.retrievePosts();
+        ArrayList<Post> postsWithoutFiles = daoObj.retrievePosts();
+        ArrayList<Post> postsList = daoObj.retrieveFiles(postsWithoutFiles);
         int counter = 0;
         for (Post post: postsList) {
-            out += "<div class=\"post\" id=" + post.getUserID() + "><h5 id=" + post.getPostID() + ">" + post.getPostID() + "</h5><h4>" + daoObj.retrieveUsername(post.getUserID()) + "</h4><div class=\"post-body\">" + post.getText() + "</div><div class=\"post-date\">" + post.getDate().toString() + "</div><div class=\"post-tags\">" + post.getTags() + "</div></div>";
+            out += "" +
+                    "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
+                        "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
+                            "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                            "<div>Post id: " + post.getPostID() + "</div>" +
+                        "</div>"+
+                        "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
+                        "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
+                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "</div>";
 
-            BufferedImage image = ImageIO.read(post.getAttachment());
+            BufferedImage image = null;
+            if (post.getAttachment() != null)
+                image = ImageIO.read(post.getAttachment());
             if (image != null) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ImageIO.write(image, "png", bos );
@@ -111,9 +95,11 @@ public class MessageBoard {
                 BufferedImage bImage2 = ImageIO.read(bis);
                 String fileName = "test" + counter +".png";
                 ImageIO.write(bImage2, "png", new File("C:\\Users\\alway\\Desktop\\SOEN 387\\SOEN-387-A2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
-                out += "<div><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div>";
+                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div></div>";
                 System.out.println("image created");
                 counter++;
+            }else {
+                out += "</div>";
             }
         }
         return out;
