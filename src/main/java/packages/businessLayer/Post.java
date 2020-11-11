@@ -1,10 +1,13 @@
 package packages.businessLayer;
 
+import javax.servlet.http.Part;
 import java.awt.Image;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.Date;
 
 public class Post {
-    private String attachment;
+    private InputStream attachment;
     private String text;
     private Date date;
     private boolean updated;
@@ -12,10 +15,10 @@ public class Post {
     private int postID;
     private int userID;
 
-    public Post(int userID, String text, String img, Date date, String[] tags) {
+    public Post(int userID, String text, InputStream file, Date date, String[] tags) {
         this.userID = userID;
         this.text = text;
-        this.attachment = img;
+        this.attachment = file;
         this.date = date;
         this.updated = false;
         this.tags = tags;
@@ -29,11 +32,11 @@ public class Post {
         return this.text;
     }
 
-    public void setAttachment(String att) {
+    public void setAttachment(InputStream att) {
         this.attachment = att;
     }
 
-    public String getAttachment() {
+    public InputStream getAttachment() {
         return this.attachment;
     }
 

@@ -44,10 +44,10 @@
     <%= msgboard.display()%>
 
 
-    <form action="MessageBoardServlet" method="post">
+    <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
         <input type="text" name="message">
-        <input type="file" name="attachment" value="Add attachment">
-        <input type="submit" name="action" value="Create">
+        <input type="file" name="photo" value="Add attachment">
+        <input type="submit" name="create" value="Create">
 
         <br><br>
 
@@ -60,8 +60,10 @@
                 }
             %>
         </select>
-        <input type="submit" name="action" value="Delete Post"/>
+        <input type="submit" name="delete" value="Delete Post"/>
+
         <br><br>
+
         <label for="updatePost">Select Post's ID to update:</label>
         <select id="updatePost" name="updatePost">
             <%! ArrayList<Integer> postIDs = msgboard.retrievePostIDs();%>

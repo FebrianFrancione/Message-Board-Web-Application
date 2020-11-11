@@ -4,6 +4,8 @@ import packages.businessLayer.Post;
 import packages.businessLayer.User;
 import packages.database.DBConnection;
 
+import javax.servlet.http.Part;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +68,8 @@ public class DAO {
 
             ps.setInt(1, post.getUserID());
             ps.setString(2, post.getText());
-            ps.setString(3, post.getAttachment());
+            //ps.setString(3, post.getAttachment());
+            ps.setBlob(3, post.getAttachment());
 
             java.sql.Date sqlDate = new java.sql.Date(post.getDate().getTime());
 
@@ -207,19 +210,14 @@ public class DAO {
             ResultSet rs = stmt.executeQuery("SELECT * FROM posts");
 
             while(rs.next()) {
-                Post post = new Post(rs.getInt("userID"), rs.getString("text"), rs.getString("attachmentSource"), new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags").split(" "));
+                Blob file = rs.getBlob("attachmentSource");
+                InputStream binaryStream = file.getBinaryStream();
+
+                Post post = new Post(rs.getInt("userID"), rs.getString("text"), binaryStream, new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags").split(" "));
+
                 post.setPostID(rs.getInt("postID"));
+
                 retrievedPosts.add(post);
-                //                retrievedPosts[index].setPostID(rs.getInt("postID"));
-//                retrievedPosts[index].setUserID(rs.getInt("userID"));
-//                retrievedPosts[index].setText(rs.getString("text"));
-//                retrievedPosts[index].setAttachment(rs.getString("attachmentSource"));
-//
-//                java.util.Date utilDate = new java.util.Date(rs.getDate("date").getTime());
-//
-//                retrievedPosts[index].setDate(utilDate);
-//                retrievedPosts[index].setTags(rs.getString("tags").split(" "));
-                //index++;
             }
 
         } catch (SQLException e) {

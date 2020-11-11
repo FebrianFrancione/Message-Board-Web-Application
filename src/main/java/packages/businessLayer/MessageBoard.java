@@ -2,11 +2,20 @@ package packages.businessLayer;
 
 import packages.DAO.DAO;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.Part;
+import javax.swing.*;
 import javax.xml.bind.DatatypeConverter;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 
 public class MessageBoard {
@@ -35,7 +44,7 @@ public class MessageBoard {
         daoObj.update(user);
     }
 
-    public void createPost(int userID, String text, String att, String tags) {
+    public void createPost(int userID, String text, InputStream att, String tags) {
         Date date = new Date();
         String[] tagsArray = tags.split(" ");
 
@@ -86,12 +95,26 @@ public class MessageBoard {
         /*retreive posts in-order from database*/
     }
 
-    public String display() {
+    public String display() throws IOException {
         String out = "";
         ArrayList<Post> postsList = daoObj.retrievePosts();
-
+        int counter = 0;
         for (Post post: postsList) {
             out += "<div class=\"post\" id=" + post.getUserID() + "><h5 id=" + post.getPostID() + ">" + post.getPostID() + "</h5><h4>" + daoObj.retrieveUsername(post.getUserID()) + "</h4><div class=\"post-body\">" + post.getText() + "</div><div class=\"post-date\">" + post.getDate().toString() + "</div><div class=\"post-tags\">" + post.getTags() + "</div></div>";
+
+            BufferedImage image = ImageIO.read(post.getAttachment());
+            if (image != null) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", bos );
+                byte [] data = bos.toByteArray();
+                ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                BufferedImage bImage2 = ImageIO.read(bis);
+                String fileName = "test" + counter +".png";
+                ImageIO.write(bImage2, "png", new File("C:\\Users\\alway\\Desktop\\SOEN 387\\SOEN-387-A2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
+                out += "<div><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div>";
+                System.out.println("image created");
+                counter++;
+            }
         }
         return out;
     }

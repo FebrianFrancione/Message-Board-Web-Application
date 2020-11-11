@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -80,6 +82,5 @@ public class UploadServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

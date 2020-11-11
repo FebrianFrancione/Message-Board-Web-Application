@@ -2,23 +2,29 @@ import packages.DAO.DAO;
 import packages.businessLayer.MessageBoard;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.http.Part;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
+import java.util.Arrays;
 import java.util.Date;
-
+import java.util.Enumeration;
 
 
 @WebServlet(name="MessageBoardServlet")
+@MultipartConfig(maxFileSize = 16177215) // upload file size up yto 16MB
 public class MessageBoardServlet extends HttpServlet {
     public void init() throws ServletException {
 
@@ -29,29 +35,33 @@ public class MessageBoardServlet extends HttpServlet {
         Integer userID = (Integer) request.getSession().getAttribute("userID");
         //if we have an active session and userID is set
         if(userID != null){
-            String msg = request.getParameter("message");
             // the message board object is our business layer object that is responsible for manipulating the data
             MessageBoard msgBoard = new MessageBoard();
 
-            String msgBoardAction = request.getParameter("action");
-            if (msgBoardAction.equals("Create")) {
+            Part msgBoardAction = null;
+
+            if (request.getPart("create") != null) {
                 String text = request.getParameter("message");
-                msgBoard.createPost(userID,text,"","");
+                InputStream inputStream = request.getPart("photo").getInputStream();
+
+                msgBoard.createPost(userID,text,inputStream,"");
             }
 
-            if (msgBoardAction.equals("Delete Post")) {
+            if (request.getPart("delete") != null) {
                 String ID = request.getParameter("deletePost");
-                msgBoard.deletePost(userID, Integer.parseInt(ID));  //delete(userID, postID), will delete only if user is trying to delete his own post
+                msgBoard.deletePost(userID, Integer.parseInt(ID));
             }
 
-            if (msgBoardAction.equals("Update Post")) {
-                String text = request.getParameter("updatedMessage");
-                String ID = request.getParameter("updatePost");
+//            if (request.getPart("update") != null) {
+//                String text = request.getParameter("updatedMessage");
+//                String ID = request.getParameter("updatePost");
+//                InputStream inputStream = request.getPart("updatedAttachment").getInputStream();
+//
+//                msgBoard.updatePost(userID, Integer.parseInt(ID), text);
+//            }
 
-                msgBoard.updatePost(userID, Integer.parseInt(ID), text);
-            }
-
-            RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
+           RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
+            //response.sendRedirect("loggedIn.jsp");
             rd.forward(request, response);
 
         }else{
