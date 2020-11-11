@@ -9,7 +9,8 @@ import java.io.IOException;
 /**
  * Servlet implementation class admin.LogoutServlet
  */
-@WebServlet("/admin/LogoutServlet")
+//@WebServlet("/admin/LogoutServlet")
+@WebServlet("LogoutServlet")
 public class LogoutServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
