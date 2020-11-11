@@ -33,8 +33,15 @@
     </form>
     <br>
     <hr>
+    <a href="file_list.jsp">View List</a>
     <form action="UploadServlet" method="post" enctype="multipart/form-data">
-        <input type="file" required="" name="photo">
+        <input type="file" name="filename" id="filename"
+               accept=".txt,
+application/pdf,
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+application/vnd.ms-excel,
+application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+application/msword"/>
         <input type="submit" value="Save">
     </form>
     <%

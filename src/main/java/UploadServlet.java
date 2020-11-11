@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 @WebServlet(name = "UploadServlet")
-@MultipartConfig(maxFileSize = 16177215) // upload file size up yto 16MB
+@MultipartConfig(maxFileSize = 1024*1024*1024*30) // upload file size up yto 16MB - 4GB
 public class UploadServlet extends HttpServlet {
 
     // database connection settings this needs use the dbconnection file
@@ -23,7 +23,7 @@ public class UploadServlet extends HttpServlet {
         InputStream inputStream = null; // input stream of the upload file
 
 // obtains the upload file part in this multipart request
-        Part filePart = request.getPart("photo");
+        Part filePart = request.getPart("filename");
         if (filePart != null) {
 // prints out some information for debugging
             System.out.println(filePart.getName());
