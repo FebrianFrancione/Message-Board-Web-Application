@@ -45,7 +45,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/admin/LogoutServlet</url-pattern>
+<!--        <url-pattern>/admin/LogoutServlet</url-pattern>-->
+        <url-pattern>/LogoutServlet</url-pattern>
+
     </servlet-mapping>
 
     <welcome-file-list>
