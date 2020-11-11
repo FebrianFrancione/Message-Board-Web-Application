@@ -1,9 +1,9 @@
 # SOEN-387-A2
 Soen 387 assignment 2
 
-Daniel Fakhr - 40041949
-Ramy Elhoufy - 40001513
 Christophe Bahenduzi - 40068173
+Ramy Elhoufy - 40001513
+Daniel Fakhr - 40041949
 Febrian Francione - 40049253
 
 Description of the application: 
