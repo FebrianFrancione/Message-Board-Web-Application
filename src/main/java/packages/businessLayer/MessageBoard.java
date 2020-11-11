@@ -17,6 +17,7 @@ import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 //import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import org.apache.commons.codec.binary.Base64;
 
@@ -47,9 +48,9 @@ public class MessageBoard {
         daoObj.update(user);
     }
 
-    public void createPost(int userID, String text, InputStream att, String tags) throws IOException {
+    public void createPost(int userID, String text, InputStream att, String tags, String fileName, long size, String fileType) throws IOException {
         Date date = new Timestamp(System.currentTimeMillis());
-        Post post = new Post(userID, text, att, date, tags);
+        Post post = new Post(userID, text, att, date, tags, fileName, size, fileType);
 
         daoObj.insert(post);
     }
@@ -70,12 +71,26 @@ public class MessageBoard {
         /*retreive posts in-order from database*/
     }
 
-    public String display() throws IOException {
+    public String display(int i, String reverse) throws IOException {
         String out = "";
         ArrayList<Post> postsWithoutFiles = daoObj.retrievePosts();
         ArrayList<Post> postsList = daoObj.retrieveFiles(postsWithoutFiles);
+        String lastUpdated = "";
+
+        if (reverse.equals("true")) {
+            Collections.reverse(postsList);
+        }
+
         int counter = 0;
         for (Post post: postsList) {
+            if (counter == i) {
+                break;
+            }
+            lastUpdated = "";
+            if (post.getLastUpdated() != null) {
+                lastUpdated += "Last Updated: " + post.getLastUpdated();
+            }
+
             out += "" +
                     "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
                         "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
@@ -84,7 +99,7 @@ public class MessageBoard {
                         "</div>"+
                         "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
                         "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
-                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "</div>";
+                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
 
             BufferedImage image = null;
             if (post.getAttachment() != null) {
@@ -95,10 +110,10 @@ public class MessageBoard {
             }else {
                 out += "</div>";
             }
+            counter ++;
         }
         return out;
     }
-
 
     public ArrayList<Integer> retrievePostIDs() {
         ArrayList<Integer> IDs = new ArrayList<Integer>();

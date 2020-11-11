@@ -41,7 +41,10 @@
 
     <h1>Chat area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
-    <%= msgboard.display()%>
+    <%! int i = 10; String reverse = "";%>
+    <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>
+    <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
+    <%= msgboard.display(i, reverse)%>
 
 
     <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
@@ -85,7 +88,17 @@
 
         <br><br>
 
-        <button type="button">View recent Post!</button>
+        <label for="viewRecently">Select number of posts to display: </label>
+        <select id="viewRecently" name="numberOfPosts">
+            <option></option>
+            <option>1</option>
+            <option>5</option>
+            <option>10</option>
+        </select>
+        <input type="submit" name="viewRecently" value="View Recent Posts"/>
+
+        <br><br>
+
         <button type="button">Download!</button>
         <button type="button">Clear Chat!</button>
         <button type="button">???!</button>
