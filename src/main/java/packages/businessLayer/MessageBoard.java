@@ -68,12 +68,26 @@ public class MessageBoard {
 //        /*retrieve an array from database*/
 //    }
 
-    public String displaySearched(int userID) throws IOException{
+    public String displaySearched(String username, int i, String reverse) throws IOException{
         String out = "";
-        ArrayList<Post> searchedPosts = daoObj.searchPosts(userID);
-        ArrayList<Post> searchPostsFiles = daoObj.retrieveFiles(searchedPosts);
+        ArrayList<Post> searchedPosts = daoObj.searchPosts(username);
+        ArrayList<Post> filesSearchedPosts = daoObj.retrieveFiles(searchedPosts);
+        String lastUpdated = "";
+
+        if (reverse.equals("true")) {
+            Collections.reverse(filesSearchedPosts);
+        }
+
         int counter = 0;
-        for (Post post: searchPostsFiles) {
+        for (Post post: filesSearchedPosts) {
+            if (counter == i) {
+                break;
+            }
+            lastUpdated = "";
+            if (post.getLastUpdated() != null) {
+                lastUpdated += "Last Updated: " + post.getLastUpdated();
+            }
+
             out += "" +
                     "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
                     "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
@@ -82,34 +96,20 @@ public class MessageBoard {
                     "</div>"+
                     "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
                     "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
-                    "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "</div>";
+                    "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
 
             BufferedImage image = null;
-            if (post.getAttachment() != null)
-                image = ImageIO.read(post.getAttachment());
-            if (image != null) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ImageIO.write(image, "png", bos );
-                byte [] data = bos.toByteArray();
-                ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                BufferedImage bImage2 = ImageIO.read(bis);
-                String fileName = "test" + counter +".png";
-                ImageIO.write(bImage2, "png", new File("C:\\Users\\Bahenduzi\\OneDrive - Concordia University - Canada\\Concordia\\FALL 2020\\SOEN387\\Assignments\\A2\\A2-2\\src\\main\\webapp\\files\\"+fileName) );  //paste your absolute url path here and add \\ after it
-                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"./files/"+fileName+"\"></div></div>";
-                System.out.println("image created");
-                counter++;
+
+            if (post.getAttachment() != null) {
+                byte[] imageBytes = new byte[(int)post.getAttachment().available()];
+                post.getAttachment().read(imageBytes, 0, imageBytes.length);
+                String imageString = Base64.encodeBase64String(imageBytes);
+                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"data:image/jpeg;base64, " + imageString + "\"></div></div>";
             }else {
                 out += "</div>";
             }
+            counter ++;
         }
-        return out;
-    }
-
-    public String displayedUserID(String username) throws IOException{
-        String out = "";
-        int userID = daoObj.littleMethod(username);
-        out += "" + "<div>"+userID+"</div>";
-
         return out;
     }
 

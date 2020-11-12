@@ -128,10 +128,7 @@
             </div>
         </div>
 
-        <p>Yo</p>
-        <%= msgboard.displaySearched(1)%>
-        <%= msgboard.displayedUserID("u2")%>
-        <p>End</p>
+        <%= msgboard.displaySearched("U1",i, reverse)%>
 
         <hr class="solid">
     </form>

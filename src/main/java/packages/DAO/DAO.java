@@ -367,19 +367,28 @@ public class DAO {
         }
         return retrievedPosts;
     }
-    public int littleMethod (String username){
 
-        int searchedUserID =0;
+    //retrieve posts from posts table based on a search for user
+    public ArrayList<Post> searchPosts(String username) {
+
+        int searchedUserID;
         Connection connection = DBConnection.getConnection();
+        ArrayList<Post> listOfSearchedPosts = new ArrayList<Post>();
+
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username="+username);
+            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username="+"\""+username+"\"");
 
             if(query1.next()){
                 searchedUserID = query1.getInt("userID");
-                System.out.print(searchedUserID);
-                return searchedUserID;
+                ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + searchedUserID);
+
+                while (query2.next()) {
+
+                    Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
+                    listOfSearchedPosts.add(userPost);
+                }
             }
 
         }catch (SQLException e) {
@@ -388,57 +397,6 @@ public class DAO {
             try{
                 connection.close();
             } catch(SQLException e){
-                e.printStackTrace();
-            }
-        }
-      return searchedUserID;
-    }
-
-    //retrieve posts from posts table based on a search for user
-    public ArrayList<Post> searchPosts(int userID) {
-
-        int searchedUserID;
-        Connection connection = DBConnection.getConnection();
-        ArrayList<Post> listOfSearchedPosts = new ArrayList<Post>();
-
-
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username=" + username);
-//
-//            if(query1.next()){
-//                searchedUserID = query1.getInt("searchUserID");
-//            }
-//
-//        }catch (SQLException e) {
-//            e.printStackTrace();
-//        }finally {
-//            try{
-//                connection.close();
-//            } catch(SQLException e){
-//                e.printStackTrace();
-//            }
-//        }
-        try{
-            Statement statement = connection.createStatement();
-//
-            ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + userID);
-
-            while (query2.next()) {
-
-                Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
-                listOfSearchedPosts.add(userPost);
-            }
-//            }
-
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        } finally {
-            try{
-                connection.close();
-            }
-            catch (SQLException e){
                 e.printStackTrace();
             }
         }
