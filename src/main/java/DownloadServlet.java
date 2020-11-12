@@ -1,4 +1,6 @@
 import com.sun.glass.ui.Size;
+import packages.DAO.DAO;
+import packages.database.DBConnection;
 
 import java.io.*;
 import java.sql.*;
@@ -27,25 +29,65 @@ public class DownloadServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String dbURL = "jdbc:mysql://127.0.0.1:3306/messageboard?user=root";
-        final String dbUser = "root";
-        final String dbPass = "1234";
+
+        //get the fileID of the file requested from file_list.jsp
+        String fileID = request.getParameter("fileID");
 
         Connection conn = null;
         Statement stmt = null;
+        String fileName = null;
+        Blob blob;
 
         try {
-            //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+            //get conn to DB
+            conn = DBConnection.getConnection();
+
             System.out.println("db connected");
+
             stmt = (Statement) conn.createStatement();
 
-            ResultSet rs1;
-            rs1 = stmt.executeQuery("select file from files where fileID = 1");
+            //request the file Blob and the FileName from the DB
+            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
 
             if (rs1.next()) {
+                // get the file name
+                fileName = rs1.getString("file_name");
+                //get the blob
+                blob = rs1.getBlob("file");
+
+                InputStream inputStream = blob.getBinaryStream();
+
+                ServletContext context = getServletContext();
+
+                // find the mimeType of the file . Set binary if nothing is found
+                String mimeType = context.getMimeType(fileName);
+                if (mimeType == null) {
+                    mimeType = "application/binary";
+                }
+
+                // setting the Content type header, the content length header, and the Content disposition header
+                response.setContentType(mimeType);
+                response.setContentLength(inputStream.available());     //inputStream.available() will give the file length
+                String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+                response.setHeader("Content-Disposition" , headerValue);
+
+                // get the servlet output stream
+                OutputStream outStream = response.getOutputStream();
+
+                //buffer size is defined at the top
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int bytesRead = -1;
+
+                //writing the the outputStream
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outStream.write(buffer, 0, bytesRead);
+                }
+
+                inputStream.close();
+                outStream.close();
+
+                /*
                 byte[] imgData = rs1.getBytes("file");//Here....... r1.getBytes() extract byte data from resultSet
                 System.out.println(imgData);
                 response.setHeader("expires", "0");
@@ -54,10 +96,10 @@ public class DownloadServlet extends HttpServlet {
                 OutputStream os = response.getOutputStream(); // output with the help of outputStream
                 os.write(imgData);
                 os.flush();
-                os.close();
+                os.close();*/
 
             }
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException ex) {
             // String message = "ERROR: " + ex.getMessage();
             ex.printStackTrace();
         } finally {

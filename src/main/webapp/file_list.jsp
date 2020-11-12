@@ -43,9 +43,10 @@
         %>
         <tr>
             <td><%= rs.getInt(1)%></td>
-            <td><%= rs.getBlob(2)%></td>
-            <td><%= rs.getTimestamp(3)%></td>
+            <td><%= rs.getString(2)%></td>
+            <td><%= rs.getTimestamp(4)%></td>
             <td> <form action="DownloadServlet" method="post">
+                <input type="hidden" name="fileID" value="<%= rs.getInt(1)%>">
                 <a href=""><input type="submit" value="download!" ></a></form>
             </td>
         </tr>
