@@ -4,6 +4,7 @@ import javax.servlet.http.Part;
 import java.awt.Image;
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Post {
@@ -14,14 +15,41 @@ public class Post {
     private String tags;
     private int postID;
     private int userID;
+    private Timestamp lastUpdated;
+    private String originalFileName;
+    private String fileType;
+    private long fileSize;
 
-    public Post(int userID, String text, InputStream file, Date date, String tags) {
+    public Post(int userID, String text, InputStream file, Date date, String tags, String fileName, long size, String type) {
         this.userID = userID;
         this.text = text;
         this.attachment = file;
         this.date = date;
         this.updated = false;
         this.tags = tags;
+        this.originalFileName = fileName;
+        this.fileSize = size;
+        this.fileType = type;
+    }
+
+    public String getOriginalFileName() {
+        return this.originalFileName;
+    }
+
+    public String getFileType() {
+        return this.fileType;
+    }
+
+    public long getFileSize() {
+        return this.fileSize;
+    }
+
+    public void setLastUpdated(Timestamp ts) {
+        this.lastUpdated = ts;
+    }
+
+    public Timestamp getLastUpdated() {
+        return this.lastUpdated;
     }
 
     public Post(int postID, int userID, String text, InputStream file, Date date, String tags){

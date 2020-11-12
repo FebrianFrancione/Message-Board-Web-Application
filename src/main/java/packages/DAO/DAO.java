@@ -91,7 +91,7 @@ public class DAO {
                 int id = retrievePostID(post);
 
                 if (post.getAttachment().available() != 0) {
-                    insertFile(id, post.getAttachment());
+                    insertFile(id, post.getAttachment(), post.getOriginalFileName(), post.getFileSize(), post.getFileType());
                 }
                 return true;
             }
@@ -111,17 +111,20 @@ public class DAO {
     }
 
     //insert file into files table
-    public boolean insertFile(int id, InputStream inputStream) {
+    public boolean insertFile(int id, InputStream inputStream, String fileName, long size, String type) {
         Connection connection = DBConnection.getConnection();
 
         try {
-            String query = "INSERT INTO files (fileID, file, date) VALUES (?, ?, ?)";
+            String query = "INSERT INTO files (fileID, file, date, fileName, fileSize, fileType) VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, id);
             ps.setBlob(2, inputStream);
             ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            ps.setString(4, fileName);
+            ps.setLong(5, size);
+            ps.setString(6, type);
 
             int i = ps.executeUpdate();
 
@@ -189,29 +192,38 @@ public class DAO {
         try {
             PreparedStatement ps = null;
             if (text.length() != 0 && inputStream.available() == 0 && tags.length() == 0) {
-                ps = connection.prepareStatement("UPDATE posts SET text=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET text=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, text);
+                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             } else if (text.length() != 0 && inputStream.available() != 0 && tags.length() == 0) {
-                ps = connection.prepareStatement("UPDATE posts SET text=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET text=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, text);
+                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
                 updateFile(postID, inputStream);
             } else if (text.length() != 0 && inputStream.available() == 0 && tags.length() != 0) {
-                ps = connection.prepareStatement("UPDATE posts SET text=?, tags=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET text=?, tags=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, text);
                 ps.setString(2, tags);
+                ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             } else if (text.length() == 0 && inputStream.available() != 0 && tags.length() == 0) {
+                ps = connection.prepareStatement("UPDATE posts SET lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
                 updateFile(postID, inputStream);
+                return true;
             } else if (text.length() == 0 && inputStream.available() != 0 && tags.length() != 0) {
-                ps = connection.prepareStatement("UPDATE posts SET tags=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET tags=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, tags);
+                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
                 updateFile(postID, inputStream);
             }  else if (text.length() == 0 && inputStream.available() == 0 && tags.length() != 0) {
-                ps = connection.prepareStatement("UPDATE posts SET tags=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET tags=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, tags);
+                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             }   else {
-                ps = connection.prepareStatement("UPDATE posts SET text=?, tags=? WHERE postID=" + postID + " AND userID=" + userID);
+                ps = connection.prepareStatement("UPDATE posts SET text=?, tags=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
                 ps.setString(1, text);
                 ps.setString(2, tags);
+                ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
                 updateFile(postID, inputStream);
             }
 
@@ -338,8 +350,8 @@ public class DAO {
 //                Blob file = rs.getBlob("attachmentSource");
 //                InputStream binaryStream = file.getBinaryStream();
 
-                Post post = new Post(rs.getInt("userID"), rs.getString("text"), null, new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags"));
-
+                Post post = new Post(rs.getInt("userID"), rs.getString("text"), null, new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags"), null, 0, null);
+                post.setLastUpdated(rs.getTimestamp("lastUpdated"));
                 post.setPostID(rs.getInt("postID"));
 
                 retrievedPosts.add(post);

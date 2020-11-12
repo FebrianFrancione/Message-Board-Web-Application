@@ -38,14 +38,16 @@ public class MessageBoardServlet extends HttpServlet {
             // the message board object is our business layer object that is responsible for manipulating the data
             MessageBoard msgBoard = new MessageBoard();
 
-            Part msgBoardAction = null;
-
             if (request.getPart("create") != null) {
                 String text = request.getParameter("message");
                 InputStream inputStream = request.getPart("photo").getInputStream();
                 String tags = request.getParameter("tags");
 
-                msgBoard.createPost(userID, text, inputStream, tags);
+                String originalFileName = request.getPart("photo").getSubmittedFileName();
+                long fileSize = request.getPart("photo").getSize();
+                String fileType = request.getPart("photo").getContentType();
+
+                msgBoard.createPost(userID, text, inputStream, tags, originalFileName, fileSize, fileType);
             }
 
             if (request.getPart("delete") != null) {
@@ -62,6 +64,28 @@ public class MessageBoardServlet extends HttpServlet {
                 msgBoard.updatePost(userID, Integer.parseInt(ID), text, inputStream, tags);
             }
 
+            String reverse = "false";
+            int numberOfPostsToDisplay = 0;
+            if (request.getPart("viewRecently") != null) {
+                reverse = "true";
+
+                if (!request.getParameter("numberOfPosts").equals("")) {
+                    numberOfPostsToDisplay = Integer.parseInt(request.getParameter("numberOfPosts"));
+                }
+            }
+
+            InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            String line = null;
+            while((line = in.readLine()) != null) {
+                System.out.println(line);
+                if (line.indexOf("displayed_posts:") != -1) {
+                    numberOfPostsToDisplay = Integer.parseInt(line.split(": ")[1].replace(" ", ""));
+                }
+            }
+            System.out.println(numberOfPostsToDisplay);
+            request.setAttribute("recentPosts", reverse);
+            request.setAttribute("numberOfPosts", numberOfPostsToDisplay);
             RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
             //response.sendRedirect("loggedIn.jsp");
             rd.forward(request, response);
