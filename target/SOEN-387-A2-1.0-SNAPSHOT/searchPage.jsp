@@ -33,7 +33,6 @@
     <a class="active" href="#Search">Search</a>
     <form action="LogoutServlet" method="post">
         <a href=""><input type="submit" value="Logout" ></a></form>
-    <input type="text" placeholder="Search..">
 </div>
 
 <%--<br><br>--%>
@@ -60,9 +59,9 @@
             <br>
             <span for="updatePost">Search for Post by Date Range:</span>
             <label for="searchByDate">From:</label>
-            <input placeholder="d-m-y hh:mm:ss" name="fromDate" >
+            <input placeholder="yyyy-MM-dd HH:mm:ss" name="fromDate" >
             <label for="searchByDate">To:</label>
-            <input placeholder="d-m-y hh:mm:ss" name="toDate" >
+            <input placeholder="yyyy-MM-dd HH:mm:ss" name="toDate" >
         </div>
         <div>
             <br>
@@ -91,9 +90,11 @@
 
 <%--        <%= msgboard.displaySearched("U1",i, reverse)%>--%>
 
-<%--        <%= msgboard.displaySearchByDates("2020-11-09 00:00:00",i, reverse)%>--%>
+<%--        <%= msgboard.displaySearchByDates("2020-11-09 00:00:00", "2020-11-13 00:00:00", i, reverse)%>--%>
 
-        <%= msgboard.displaySearchByTags("re",i, reverse)%>
+<%--        <%= msgboard.displaySearchByTags("re",i, reverse)%>--%>
+
+        <%= msgboard.displayAllSearched("U1", "2020-11-09 00:00:00", "2020-11-13 00:00:00", "is", i, reverse) %>
 
 
     </form>

@@ -13,7 +13,6 @@
     <a href="#about">About</a>
     <a href="#search">Search</a>
     <a href="login.jsp">Login</a>
-    <input type="text" placeholder="Search..">
 </div>
 
 

@@ -29,7 +29,6 @@
     <a href="searchPage.jsp">Search</a>
     <form action="LogoutServlet" method="post">
     <a href=""><input type="submit" value="Logout" ></a></form>
-    <input type="text" placeholder="Search..">
 </div>
 
 <%--<br><br>--%>

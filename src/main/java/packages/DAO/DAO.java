@@ -412,7 +412,7 @@ public class DAO {
         ArrayList<Post> listOfDatePosts = new ArrayList<Post>();
         try{
             Statement statement = connection.createStatement();
-            ResultSet query3 = statement.executeQuery("SELECT * FROM posts WHERE date="+"\""+fromDate+"\"");
+            ResultSet query3 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\"");
             while(query3.next()){
                 Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, new java.util.Date(query3.getDate("date").getTime()), query3.getString("tags"));
                 listOfDatePosts.add(datePost);
@@ -450,6 +450,38 @@ public class DAO {
             }
         }
         return listsOfTagPosts;
+    }
+
+    // retrieve posts based on a search of user, tag and date range
+    public ArrayList<Post> searchAll (String username, String fromDate, String toDate, String tag){
+
+     int searchedUserID;
+     Connection connection = DBConnection.getConnection();
+     ArrayList<Post> listOfAllSearchedPosts = new ArrayList<Post>();
+
+     try{
+         Statement statement = connection.createStatement();
+         ResultSet query5 = statement.executeQuery("SELECT userID FROM users WHERE username="+"\""+username+"\"");
+
+         if(query5.next()){
+             searchedUserID = query5.getInt("userID");
+             ResultSet query6 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\""+" AND userID="+searchedUserID+" AND tags="+"\""+tag+"\"");
+
+             while (query6.next()) {
+                 Post searchedPost = new Post(query6.getInt("postID"), query6.getInt("userID"), query6.getString("text"), null, new java.util.Date(query6.getDate("date").getTime()), query6.getString("tags"));
+                 listOfAllSearchedPosts.add(searchedPost);
+             }
+         }
+     } catch (SQLException e){
+         e.printStackTrace();
+     } finally {
+         try{
+             connection.close();
+         }catch (SQLException e){
+             e.printStackTrace();
+         }
+     }
+        return listOfAllSearchedPosts;
     }
 
     //retrieve files from files table and bind them to posts
