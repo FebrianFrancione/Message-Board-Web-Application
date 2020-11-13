@@ -26,6 +26,7 @@
     <a href="#news">News</a>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
+    <a href="searchPage.jsp">Search</a>
     <form action="LogoutServlet" method="post">
     <a href=""><input type="submit" value="Logout" ></a></form>
     <input type="text" placeholder="Search..">
@@ -103,34 +104,6 @@
         <button type="button">Clear Chat!</button>
         <button type="button">???!</button>
 
-        <hr class="solid">
-        <label for="updatePost">Search for Post by User:</label>
-        <input type="text" placeholder="Search.." name="searchUsername">
-        <div>
-            <span for="updatePost">Search for Post by Date Range:</span>
-            <label for="updatePost">From:</label>
-            <input placeholder="d-m-y hh:mm:ss" name="fromDate" >
-            <label for="updatePost">To:</label>
-            <input placeholder="d-m-y hh:mm:ss" name="toDate" >
-        </div>
-        <div>
-            <input type="radio" id="searchUser" name="searchOption" value="searchUser">
-            <label for="searchUser">Search by User</label>
-            <input type="radio" id="searchByDate" name="searchOption" value="searchByDate">
-            <label for="searchByDate">Search by Date Range</label>
-<%--            <input type="radio" id="searchByTags" name="searchOption" value="searchByTags">--%>
-<%--            <label for="searchByTags">Search by Tags</label>--%>
-            <input type="radio" id="searchAll" name="searchOption" value="searchAll">
-            <label for="searchAll">Search for all at the same time</label>
-            <div>
-                <button type="button" id="Search">Search</button>
-                <button type="button" id="Reset">Reset</button>
-            </div>
-        </div>
-
-        <%= msgboard.displaySearched("U1",i, reverse)%>
-
-        <hr class="solid">
     </form>
 
 

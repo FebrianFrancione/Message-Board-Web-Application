@@ -11,6 +11,7 @@
     <a href="#news">News</a>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
+    <a href="#search">Search</a>
     <a href="login.jsp">Login</a>
     <input type="text" placeholder="Search..">
 </div>
