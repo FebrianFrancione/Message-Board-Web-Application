@@ -83,8 +83,14 @@ public class MessageBoard {
 
     // display searched items
     public String search(String option, String username,String fromDate, String toDate, String tag, int i, String reverse) throws IOException {
-
+        System.out.println(option + username + fromDate + toDate + tag + i + reverse);
         String out = "";
+
+        if (option == null && username == null) {
+            out = display(i, reverse);
+            return out;
+        }
+
         ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag);
         ArrayList<Post> filesSearchedAllPosts = daoObj.retrieveFiles(searchedAllPosts);
 
