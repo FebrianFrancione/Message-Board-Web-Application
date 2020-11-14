@@ -28,7 +28,7 @@ public class MessageBoard {
     private DAO daoObj = new DAO();
 
 
-//    public void checkUserID(String username,String password){
+    //    public void checkUserID(String username,String password){
 //        daoObj.retrieveUserID(username,password);
 //    }
     //Sign up functionality not to be implemented
@@ -203,7 +203,8 @@ public class MessageBoard {
         return out;
     }
 
-    public String displayAllSearched(String username,String fromDate, String toDate, String tag, int i, String reverse) throws IOException{
+    public String displayAllSearched(String option, String username,String fromDate, String toDate, String tag, int i, String reverse) throws IOException{
+
         String out = "";
         ArrayList<Post> searchedAllPost = daoObj.searchAll(username,fromDate, toDate,tag);
         ArrayList<Post> filesSearchedPosts = daoObj.retrieveFiles(searchedAllPost);
@@ -248,8 +249,72 @@ public class MessageBoard {
         return out;
     }
 
+    public ArrayList<Post> searchCases(String option, String username,String fromDate, String toDate, String tag){
 
+        if (option instanceof String){
+            switch (option){
+                case "searchUser":
+                    return daoObj.searchPosts(username);
+                case "searchByDate":
+                    return daoObj.searchByDates(fromDate, toDate);
+                case "searchByTags":
+                    return daoObj.searchByTags(tag);
+                case "searchAll":
+                    return daoObj.searchAll(username, fromDate, toDate, tag);
+            }
+        }
+        return null;
+    }
 
+    // display searched items
+    public String search(String option, String username,String fromDate, String toDate, String tag, int i, String reverse) throws IOException {
+
+        String out = "";
+        ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag);
+        ArrayList<Post> filesSearchedAllPosts = daoObj.retrieveFiles(searchedAllPosts);
+
+        String lastUpdated = "";
+
+        if(searchedAllPosts != null){
+            if (reverse.equals("true")) {
+                Collections.reverse(filesSearchedAllPosts);
+            }
+        }
+
+        if(searchedAllPosts != null){  int counter = 0;
+            for (Post post : filesSearchedAllPosts) {
+                if (counter == i) {
+                    break;
+                }
+                lastUpdated = "";
+                if (post.getLastUpdated() != null) {
+                    lastUpdated += "Last Updated: " + post.getLastUpdated();
+                }
+
+                out += "" +
+                        "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
+                        "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">" +
+                        "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                        "<div>Post id: " + post.getPostID() + "</div>" +
+                        "</div>" +
+                        "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
+                        "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
+                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
+
+                BufferedImage image = null;
+
+                if (post.getAttachment() != null) {
+                    byte[] imageBytes = new byte[(int) post.getAttachment().available()];
+                    post.getAttachment().read(imageBytes, 0, imageBytes.length);
+                    String imageString = Base64.encodeBase64String(imageBytes);
+                    out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"data:image/jpeg;base64, " + imageString + "\"></div></div>";
+                } else {
+                    out += "</div>";
+                }
+                counter++;
+            }}
+        return out;
+    }
 
 
     public void displayRecent() {
@@ -278,13 +343,13 @@ public class MessageBoard {
 
             out += "" +
                     "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
-                        "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
-                            "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
-                            "<div>Post id: " + post.getPostID() + "</div>" +
-                        "</div>"+
-                        "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
-                        "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
-                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
+                    "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">"+
+                    "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                    "<div>Post id: " + post.getPostID() + "</div>" +
+                    "</div>"+
+                    "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
+                    "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
+                    "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
 
             BufferedImage image = null;
 

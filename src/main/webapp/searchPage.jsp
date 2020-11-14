@@ -43,14 +43,13 @@
 <hr>
 <section>
 
-    <h1>Chat area</h1>
+    <h1>Search area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
     <%! int i = 10; String reverse = "";%>
 
 
 
-    <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
-
+    <form action="searchPage.jsp" method="get" enctype="multipart/form-data">
         <div>
             <label for="searchUser">Search for Post by User:</label>
             <input type="text" placeholder="Search.." name="searchUsername">
@@ -80,31 +79,27 @@
             <label for="searchByTags">Search by Tags</label>
             <input type="radio" id="searchAll" name="searchOption" value="searchAll">
             <label for="searchAll">Search for all at the same time</label>
-            <div>
                 <br>
                 <br>
-                <button type="button" id="Search">Search</button>
-                <button type="button" id="Reset">Reset</button>
+                <input type="submit">
+                <input type="reset" value="Clear the textfields">
             </div>
         </div>
 
-<%--        <%= msgboard.displaySearched("U1",i, reverse)%>--%>
-
-<%--        <%= msgboard.displaySearchByDates("2020-11-09 00:00:00", "2020-11-13 00:00:00", i, reverse)%>--%>
-
-<%--        <%= msgboard.displaySearchByTags("re",i, reverse)%>--%>
-
-        <%= msgboard.displayAllSearched("U1", "2020-11-09 00:00:00", "2020-11-13 00:00:00", "is", i, reverse) %>
-
+        <% String username = request.getParameter("searchUsername"); %>
+        <% String dateRangeFrom = request.getParameter("fromDate"); %>
+        <% String dateRangeTo = request.getParameter("toDate"); %>
+        <% String tag = request.getParameter("searchByTags"); %>
+        <% String option = request.getParameter("searchOption"); %>
 
     </form>
+
+    <%= msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, i, reverse) %>
 
 
     <p>Logged in</p>
 
     <p>Session ID = <%=sessionID %></p>
-
-
 
 </section>
 
