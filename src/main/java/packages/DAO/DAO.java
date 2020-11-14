@@ -3,12 +3,10 @@ package packages.DAO;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
 import packages.database.DBConnection;
-
-import javax.servlet.http.Part;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 //the direct access object that performs the CRUD operations
 //a table for posts exists in the database with the columns: (postID, userID, text, attachmentSource, date, tags)
@@ -307,6 +305,7 @@ public class DAO {
         return false;
     }
 
+
     //delete a file from the files table.
     public boolean deleteFile(int postID) {
         Connection connection = DBConnection.getConnection();
@@ -366,6 +365,123 @@ public class DAO {
         return retrievedPosts;
     }
 
+    //retrieve posts based on a search for user
+    public ArrayList<Post> searchPosts(String username) {
+
+        int searchedUserID;
+        Connection connection = DBConnection.getConnection();
+        ArrayList<Post> listOfSearchedPosts = new ArrayList<Post>();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username="+"\""+username+"\"");
+
+            if(query1.next()){
+                searchedUserID = query1.getInt("userID");
+                ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + searchedUserID);
+
+                while (query2.next()) {
+                    Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
+                    listOfSearchedPosts.add(userPost);
+                }
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return listOfSearchedPosts;
+    }
+
+    //retrieve post based on a date range
+    public ArrayList<Post> searchByDates (String fromDate, String toDate){
+
+        Connection connection = DBConnection.getConnection();
+        ArrayList<Post> listOfDatePosts = new ArrayList<Post>();
+
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet query3 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\"");
+
+            while(query3.next()){
+                Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, new java.util.Date(query3.getDate("date").getTime()), query3.getString("tags"));
+                listOfDatePosts.add(datePost);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try{
+                connection.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return listOfDatePosts;
+    }
+
+    // retrieve post based on tags
+    public ArrayList<Post> searchByTags (String tag){
+
+        Connection connection = DBConnection.getConnection();
+        ArrayList<Post> listsOfTagPosts = new ArrayList<Post>();
+
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet query4 = statement.executeQuery("SELECT * FROM posts WHERE tags="+"\""+tag+"\"");
+
+            while(query4.next()){
+                Post tagPost = new Post(query4.getInt("postID"), query4.getInt("userID"), query4.getString("text"), null, new java.util.Date(query4.getDate("date").getTime()), query4.getString("tags"));
+                listsOfTagPosts.add(tagPost);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            try{
+                connection.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return listsOfTagPosts;
+    }
+
+    // retrieve posts based on a search of user, tag and date range
+    public ArrayList<Post> searchAll (String username, String fromDate, String toDate, String tag){
+
+     int searchedUserID;
+     Connection connection = DBConnection.getConnection();
+     ArrayList<Post> listOfAllSearchedPosts = new ArrayList<Post>();
+
+     try{
+         Statement statement = connection.createStatement();
+         ResultSet query5 = statement.executeQuery("SELECT userID FROM users WHERE username="+"\""+username+"\"");
+
+         if(query5.next()){
+             searchedUserID = query5.getInt("userID");
+             ResultSet query6 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\""+" AND userID="+searchedUserID+" AND tags="+"\""+tag+"\"");
+
+             while (query6.next()) {
+                 Post searchedPost = new Post(query6.getInt("postID"), query6.getInt("userID"), query6.getString("text"), null, new java.util.Date(query6.getDate("date").getTime()), query6.getString("tags"));
+                 listOfAllSearchedPosts.add(searchedPost);
+             }
+         }
+     } catch (SQLException e){
+         e.printStackTrace();
+     } finally {
+         try{
+             connection.close();
+         }catch (SQLException e){
+             e.printStackTrace();
+         }
+     }
+        return listOfAllSearchedPosts;
+    }
+
     //retrieve files from files table and bind them to posts
     public ArrayList<Post> retrieveFiles(ArrayList<Post> posts) {
         Connection connection = DBConnection.getConnection();
@@ -422,6 +538,7 @@ public class DAO {
         }
     }
 
+    // retrieve the username with userID
     public String retrieveUsername (int userID) {
         Connection connection = DBConnection.getConnection();
         String username = "";

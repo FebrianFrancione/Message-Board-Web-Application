@@ -26,9 +26,9 @@
     <a href="#news">News</a>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
+    <a href="searchPage.jsp">Search</a>
     <form action="LogoutServlet" method="post">
     <a href=""><input type="submit" value="Logout" ></a></form>
-    <input type="text" placeholder="Search..">
 </div>
 
 <%--<br><br>--%>
@@ -102,12 +102,15 @@
         <button type="button">Download!</button>
         <button type="button">Clear Chat!</button>
         <button type="button">???!</button>
+
     </form>
 
 
     <p>Logged in</p>
     <p><%=message%></p>
     <p>Session ID = <%=sessionID %></p>
+
+
 
 </section>
 <%--<c:if test="${not empty loggedInUser}">--%>

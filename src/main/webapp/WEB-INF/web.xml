@@ -13,6 +13,16 @@
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/loggedIn.jsp</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>AuthenticationFilter2</filter-name>
+        <filter-class>com.servlet.filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter2</filter-name>
+        <url-pattern>/searchPage.jsp</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
         <servlet-class>UploadServlet</servlet-class>
@@ -21,14 +31,7 @@
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>/UploadServlet</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>DownloadServlet</servlet-name>
-        <servlet-class>DownloadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DownloadServlet</servlet-name>
-        <url-pattern>/DownloadServlet</url-pattern>
-    </servlet-mapping>
+
     <servlet>
         <servlet-name>MessageBoardServlet</servlet-name>
         <servlet-class>MessageBoardServlet</servlet-class>

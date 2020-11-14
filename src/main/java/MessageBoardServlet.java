@@ -95,8 +95,6 @@ public class MessageBoardServlet extends HttpServlet {
             //rd.include(request, response);
         }
 
-
-
         String action = request.getParameter("action");
 
         if(action != null && action.equalsIgnoreCase("login")){
@@ -107,8 +105,6 @@ public class MessageBoardServlet extends HttpServlet {
 //            if(userID != -1) {
 //                request.getSession().setAttribute("userID",userID);
 //            }
-
-
         }
 
         String username = request.getParameter("username");

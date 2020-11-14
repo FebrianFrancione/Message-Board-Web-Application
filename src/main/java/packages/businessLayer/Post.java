@@ -52,6 +52,16 @@ public class Post {
         return this.lastUpdated;
     }
 
+    public Post(int postID, int userID, String text, InputStream file, Date date, String tags){
+        this.postID = postID;
+        this.userID = userID;
+        this.text = text;
+        this.attachment = file;
+        this.date = date;
+        this.updated = false;
+        this.tags = tags;
+    }
+
     public void setText(String text) {
         this.text = text;
     }
