@@ -4,14 +4,14 @@ import java.sql.*;
 
 public class DBConnection {
     // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";   //DO NOT CHANGE THIS
+    static final private String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";   //DO NOT CHANGE THIS
 
-    static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/messageboard?user=root"; //CHANGE THIS. "messageboard" is the name of database so change it according to your database. "?user=root" is specific to my machine you may or may not have this in your JDBC url
+    static final private String DB_URL = "jdbc:mysql://127.0.0.1:3306/messageboard?user=root"; //CHANGE THIS. "messageboard" is the name of database so change it according to your database. "?user=root" is specific to my machine you may or may not have this in your JDBC url
     // Database credentials
-    static final String DB_USER = "root";   //CHANGE THIS
-    static final String DB_PASSWORD = "1234"; //CHANGE THIS, could be empty if you haven't set up a password for your DB
+    static final private String DB_USER = "root";   //CHANGE THIS
+    static final private String DB_PASSWORD = "1234"; //CHANGE THIS, could be empty if you haven't set up a password for your DB
 
-    static Connection conn = null;
+    static private Connection conn = null;
 
     public static Connection getConnection() {
 
