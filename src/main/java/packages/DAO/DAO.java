@@ -1,18 +1,12 @@
 
 package packages.DAO;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
 import packages.database.DBConnection;
-
-import javax.servlet.http.Part;
 import java.io.*;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 //the direct access object that performs the CRUD operations
 //a table for posts exists in the database with the columns: (postID, userID, text, attachmentSource, date, tags)
@@ -371,13 +365,12 @@ public class DAO {
         return retrievedPosts;
     }
 
-    //retrieve posts from posts table based on a search for user
+    //retrieve posts based on a search for user
     public ArrayList<Post> searchPosts(String username) {
 
         int searchedUserID;
         Connection connection = DBConnection.getConnection();
         ArrayList<Post> listOfSearchedPosts = new ArrayList<Post>();
-
 
         try {
             Statement statement = connection.createStatement();
@@ -388,7 +381,6 @@ public class DAO {
                 ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + searchedUserID);
 
                 while (query2.next()) {
-
                     Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
                     listOfSearchedPosts.add(userPost);
                 }
@@ -406,13 +398,16 @@ public class DAO {
         return listOfSearchedPosts;
     }
 
-    //retrieve post based on date range
+    //retrieve post based on a date range
     public ArrayList<Post> searchByDates (String fromDate, String toDate){
+
         Connection connection = DBConnection.getConnection();
         ArrayList<Post> listOfDatePosts = new ArrayList<Post>();
+
         try{
             Statement statement = connection.createStatement();
             ResultSet query3 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\"");
+
             while(query3.next()){
                 Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, new java.util.Date(query3.getDate("date").getTime()), query3.getString("tags"));
                 listOfDatePosts.add(datePost);
@@ -431,11 +426,14 @@ public class DAO {
 
     // retrieve post based on tags
     public ArrayList<Post> searchByTags (String tag){
+
         Connection connection = DBConnection.getConnection();
         ArrayList<Post> listsOfTagPosts = new ArrayList<Post>();
+
         try{
             Statement statement = connection.createStatement();
             ResultSet query4 = statement.executeQuery("SELECT * FROM posts WHERE tags="+"\""+tag+"\"");
+
             while(query4.next()){
                 Post tagPost = new Post(query4.getInt("postID"), query4.getInt("userID"), query4.getString("text"), null, new java.util.Date(query4.getDate("date").getTime()), query4.getString("tags"));
                 listsOfTagPosts.add(tagPost);

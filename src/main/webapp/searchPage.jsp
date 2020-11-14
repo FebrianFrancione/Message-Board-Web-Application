@@ -1,9 +1,4 @@
 <%@ page import="packages.businessLayer.MessageBoard" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.GregorianCalendar" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.text.DateFormat" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,8 +42,6 @@
     <%! MessageBoard msgboard = new MessageBoard(); %>
     <%! int i = 10; String reverse = "";%>
 
-
-
     <form action="searchPage.jsp" method="get" enctype="multipart/form-data">
         <div>
             <label for="searchUser">Search for Post by User:</label>
@@ -91,11 +84,9 @@
         <% String dateRangeTo = request.getParameter("toDate"); %>
         <% String tag = request.getParameter("searchByTags"); %>
         <% String option = request.getParameter("searchOption"); %>
-
     </form>
-
+    <br>
     <%= msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, i, reverse) %>
-
 
     <p>Logged in</p>
 
