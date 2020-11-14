@@ -20,17 +20,41 @@
 <section>
     <h1>Chat area</h1>
     <form action="MessageBoardServlet" method="POST">
-        <input type="text" name="message">
-        <input type="file" name="attachment" value="Add attachment"> <br><br>
-        <input type="submit" name="create-post" value="Create">
+
+
+        <div class="post-message">
+            <div class="post-message-side">
+
+            </div>
+            <div class="post-message-header">
+                <input class="post-message-header1" type="text" name="message">
+                <input class="post-message-header2" type="file" name="attachment" value="Add attachment">
+            </div>
+            <div>
+                <input class="post-message-body" type="submit" name="create-post" value="Create">
+            </div>
+        </div>
+
         <button type="button">Delete Post!</button>
         <button type="button">Update Post!</button>
         <button type="button">View recent Post!</button>
         <button type="button">Download!</button>
         <button type="button">Clear Chat!</button>
-
         <button type="button">???!</button>
     </form>
+
+    <form action="MessageBoardServlet" method="POST">
+        <table>
+            <tr>
+                <thead></thead>
+            </tr>
+            <tr>
+
+            </tr>
+        </table>
+    </form>
+
+
     <br>
     <hr>
     <form action="UploadServlet" method="post" enctype="multipart/form-data">
