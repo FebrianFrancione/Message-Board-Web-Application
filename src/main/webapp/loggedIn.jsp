@@ -5,7 +5,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Chatr00m - Home</title>
+    <script src="https://kit.fontawesome.com/f41ca6203f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>
 <body>
@@ -22,14 +23,24 @@
 %>
 
 <div class="navbar">
-    <a class="active" href="#home">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
-    <a href="searchPage.jsp">Search</a>
-    <form action="LogoutServlet" method="post">
-    <a href=""><input type="submit" value="Logout" ></a></form>
+    <a href="#home" class="nav-link"><i class="fas fa-home"></i><span class="link-text">Home</span></a>
+    <a href="#news" onclick="alertBox();return false;"  class="nav-link"><i class="far fa-newspaper"></i><span class="link-text">News</span></a>
+    <a href="#contacts" onclick="alertBox();return false;"  class="nav-link"><i class="fas fa-id-card"></i><span class="link-text">Contact</span></a>
+    <a href="searchPage.jsp"  class="nav-link"><i class="fas fa-search"></i><span class="link-text">Search</span></a>
+    <a href="README.jsp" class="nav-link"><i class="fab fa-readme"></i><span class="link-text">About</span></a>
+
+    <form id="form1" action="LogoutServlet" method="post">
+        <a href="javascript:;" onclick="document.getElementById('form1').submit();" class="nav-link"><i class="fas fa-sign-out-alt"></i><span class="link-text">Log Out</span></a>
+        <input type="hidden" name="mess" />
+    </form>
 </div>
+
+<script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script>
+    function alertBox(){
+        alert('Oops...the feature is not implemented at the moment.')
+    }
+</script>
 
 <%--<br><br>--%>
 <%--<form action="LogoutServlet" method="post">--%>
@@ -37,7 +48,7 @@
 <%--</form>--%>
 
 <hr>
-<section>
+<main>
 
     <h1>Chat area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
@@ -118,7 +129,7 @@
 
 
 
-</section>
+</main>
 <%--<c:if test="${not empty loggedInUser}">--%>
 <%--    <p>You're still logged in.</p>--%>
 <%--</c:if>--%>

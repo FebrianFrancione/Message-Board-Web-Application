@@ -10,7 +10,8 @@
 <html>
 <head>
     <meta charset="US-ASCII">
-    <title>Login Page</title>
+    <title>Chatr00m - Login</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
     <h1>Please login to continue</h1>
 </head>
 <body>

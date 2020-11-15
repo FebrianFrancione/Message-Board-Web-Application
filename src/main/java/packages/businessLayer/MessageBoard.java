@@ -87,10 +87,37 @@ public class MessageBoard {
         System.out.println(option + username + fromDate + toDate + tag + i + reverse);
         String out = "";
 
-        if (option == null && username == null) {
-            out = display(i, reverse);
-            return out;
+        if (option == null) {
+            if(reverse == null) {
+                out = display(i, "true");
+                return out;
+            }
+            else{
+                out = display(i, reverse);
+                return out;
+            }
         }
+        if (option != null && username == null  && fromDate == null && toDate == null && tag == null){
+            if(reverse == null){
+                out = display(i, "true");
+                return out;
+            }
+            else{
+                out = display(i, reverse);
+                return out;
+            }
+        }
+
+        if (fromDate == null && toDate != null){
+            if(option != null && reverse == null){
+                out = display(i, "true");
+                return out;
+            }else if (option != null && reverse != null){
+                out = display(i, reverse);
+                return out;
+            }
+        }
+        if (fromDate != null && toDate == null){}
 
         ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag);
         ArrayList<Post> filesSearchedAllPosts = daoObj.retrieveFiles(searchedAllPosts);

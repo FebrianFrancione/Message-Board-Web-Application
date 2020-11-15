@@ -76,16 +76,17 @@ body::-webkit-scrollbar-thumb{
 }
 
 .navbar {
+    /*visibility: hidden;*/
     width: 5rem;
-
-    /*overflow: hidden;*/
-    /*background-color: #000000;*/
-    /*height: 75px*/
+    /* overflow: hidden; /
+    / background-color: #000000; /
+    / height: 75px; */
     height: 100vh;
     position: fixed;
     background: var(--bg-primary);
     transition: width 200ms ease;
 }
+
 /*.fab fa-readme,fas fa-sign-in-alt{*/
 /*    color:#ff7eee;*/
 /*}*/

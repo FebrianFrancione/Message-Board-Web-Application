@@ -67,9 +67,11 @@ public class DAO {
             ps.setString(2, post.getText());
             //ps.setBlob(3, post.getAttachment());
 
-            java.sql.Date sqlDate = new java.sql.Date(post.getDate().getTime());
+//            java.sql.Date sqlDate = new java.sql.Date(post.getDate().getTime());
 
-            ps.setDate(3, sqlDate);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+            ps.setTimestamp(3, timestamp);
             ps.setString(4, post.getTags());
 
             int i = ps.executeUpdate();
@@ -347,7 +349,7 @@ public class DAO {
 //                Blob file = rs.getBlob("attachmentSource");
 //                InputStream binaryStream = file.getBinaryStream();
 
-                Post post = new Post(rs.getInt("userID"), rs.getString("text"), null, new java.util.Date(rs.getDate("date").getTime()), rs.getString("tags"), null, 0, null);
+                Post post = new Post(rs.getInt("userID"), rs.getString("text"), null, (rs.getTimestamp("date")), rs.getString("tags"), null, 0, null);
                 post.setLastUpdated(rs.getTimestamp("lastUpdated"));
                 post.setPostID(rs.getInt("postID"));
 
@@ -381,7 +383,7 @@ public class DAO {
                 ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + searchedUserID);
 
                 while (query2.next()) {
-                    Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, new java.util.Date(query2.getDate("date").getTime()), query2.getString("tags"));
+                    Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, (query2.getTimestamp("date")), query2.getString("tags"));
                     listOfSearchedPosts.add(userPost);
                 }
             }
@@ -409,7 +411,7 @@ public class DAO {
             ResultSet query3 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\"");
 
             while(query3.next()){
-                Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, new java.util.Date(query3.getDate("date").getTime()), query3.getString("tags"));
+                Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, (query3.getTimestamp("date")), query3.getString("tags"));
                 listOfDatePosts.add(datePost);
             }
         } catch (SQLException e){
@@ -435,7 +437,7 @@ public class DAO {
             ResultSet query4 = statement.executeQuery("SELECT * FROM posts WHERE tags="+"\""+tag+"\"");
 
             while(query4.next()){
-                Post tagPost = new Post(query4.getInt("postID"), query4.getInt("userID"), query4.getString("text"), null, new java.util.Date(query4.getDate("date").getTime()), query4.getString("tags"));
+                Post tagPost = new Post(query4.getInt("postID"), query4.getInt("userID"), query4.getString("text"), null, (query4.getTimestamp("date")), query4.getString("tags"));
                 listsOfTagPosts.add(tagPost);
             }
         } catch (SQLException e){
@@ -466,7 +468,7 @@ public class DAO {
              ResultSet query6 = statement.executeQuery("SELECT * FROM posts WHERE date BETWEEN "+"\""+fromDate+"\""+"AND"+"\""+toDate+"\""+" AND userID="+searchedUserID+" AND tags="+"\""+tag+"\"");
 
              while (query6.next()) {
-                 Post searchedPost = new Post(query6.getInt("postID"), query6.getInt("userID"), query6.getString("text"), null, new java.util.Date(query6.getDate("date").getTime()), query6.getString("tags"));
+                 Post searchedPost = new Post(query6.getInt("postID"), query6.getInt("userID"), query6.getString("text"), null, (query6.getTimestamp("date")), query6.getString("tags"));
                  listOfAllSearchedPosts.add(searchedPost);
              }
          }

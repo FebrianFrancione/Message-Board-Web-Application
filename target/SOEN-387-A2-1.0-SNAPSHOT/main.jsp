@@ -6,10 +6,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Chatr00m</title>
     <script src="https://kit.fontawesome.com/f41ca6203f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
-
 </head>
 <body>
 
@@ -35,12 +34,12 @@
 <%--        <a href="login.jsp">Login</a>--%>
 </div>
 <main>
-    <h1>Chat area</h1>
-    <%! MessageBoard msgboard = new MessageBoard(); %>
-    <%! int i = 10; String reverse = "";%>
-    <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>
-    <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
-    <%= msgboard.display(i, reverse)%>
+    <h1>Welcome to Chatr00m</h1>
+<%--    <%! MessageBoard msgboard = new MessageBoard(); %>--%>
+<%--    <%! int i = 10; String reverse = "";%>--%>
+<%--    <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>--%>
+<%--    <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>--%>
+<%--    <%= msgboard.display(i, reverse)%>--%>
     <%--  <form action="MessageBoardServlet" method="POST">
 
 
