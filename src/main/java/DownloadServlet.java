@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DownloadServlet extends HttpServlet {
 
     // size of byte buffer to send file
-    private static final int BUFFER_SIZE =1024*10;
+    private static final int BUFFER_SIZE = 1024 * 10;
 
     // database connection settings
     private String dbURL = "jdbc:mysql://127.0.0.1:3306/messageboard?user=root";
@@ -71,7 +71,7 @@ public class DownloadServlet extends HttpServlet {
                 response.setContentType(mimeType);
                 response.setContentLength(inputStream.available());     //inputStream.available() will give the file length
                 String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-                response.setHeader("Content-Disposition" , headerValue);
+                response.setHeader("Content-Disposition", headerValue);
 
                 // get the servlet output stream
                 OutputStream outStream = response.getOutputStream();
@@ -115,65 +115,4 @@ public class DownloadServlet extends HttpServlet {
             }
         }
     }
-/*
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            int postID = Integer.parseInt(request.getParameter("postId"));
-            int attachmentID = Integer.parseInt(request.getParameter("attachmentId"));
-
-            DAO upd = new DAO();
-            String fileName = upd.getFileName(postID, attachmentID);
-            response.setContentType(upd.getContentType(postID, attachmentID));
-            response.setHeader("Content-Disposition", "attachment; fileName= " + fileName);
-
-            OutputStream out = response.getOutputStream();
-
-            upd.downloadFile(postID, attachmentID, fileName, out);
-
-
-        }*/
-
-//        Blob image = null;
-//        Connection con = null;
-//        Statement stmt = null;
-//        ResultSet rs = null;
-//        ServletOutputStream out = response.getOutputStream();
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/messageboard?user=root","root","1234");
-//            stmt = con.createStatement();
-//            rs = stmt.executeQuery("select file from files where fileID = '1'");
-//            if (rs.next()) {
-//                image = rs.getBlob(1);
-//            } else {
-//                response.setContentType("text/html");
-//                out.println("<html><head><title>Display Blob Example</title></head>");
-//                out.println("<body><h4><font color='red'>image not found for given id</font></h4></body></html>");
-//                return;
-//            }
-//            response.setContentType("image/gif");
-//            InputStream in = image.getBinaryStream();
-//            int length = (int) image.length();
-//            int bufferSize = 1024;
-//            byte[] buffer = new byte[bufferSize];
-//            while ((length = in.read(buffer)) != -1) {
-//                out.write(buffer, 0, length);
-//            }
-//            in.close();
-//            out.flush();
-//        } catch (Exception e) {
-//            response.setContentType("text/html");
-//            out.println("<html><head><title>Unable To Display image</title></head>");
-//            out.println("<body><h4><font color='red'>Image Display Error=" + e.getMessage() +
-//                    "</font></h4></body></html>");
-//            return;
-//        } finally {
-//            try {
-//                rs.close();
-//                stmt.close();
-//                con.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//
 }
-

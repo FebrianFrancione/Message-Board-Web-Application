@@ -20,7 +20,7 @@
     }
 %>
 
-<div class="topnav">
+<div class="navbar">
     <a  href="loggedIn.jsp">Home</a>
     <a href="#news">News</a>
     <a href="#contact">Contact</a>

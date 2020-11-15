@@ -91,8 +91,8 @@ public class MessageBoardServlet extends HttpServlet {
             rd.forward(request, response);
 
         }else{
-            //RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-            //rd.include(request, response);
+RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+rd.include(request, response);
         }
 
         String action = request.getParameter("action");
