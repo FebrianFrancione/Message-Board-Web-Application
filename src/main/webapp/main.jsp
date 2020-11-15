@@ -57,7 +57,7 @@
 
     <br>
     <hr>
-    <a href="file_list.jsp">View List</a>
+
     <form action="UploadServlet" method="post" enctype="multipart/form-data">
         <input type="file" name="filename" id="filename"
                accept=".txt,

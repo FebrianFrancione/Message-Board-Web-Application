@@ -49,7 +49,7 @@ public class DownloadServlet extends HttpServlet {
 
             //request the file Blob and the FileName from the DB
 //            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
-            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + 20);
+            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
 
             if (rs1.next()) {
                 // get the file name
