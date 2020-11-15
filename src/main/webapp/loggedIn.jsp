@@ -97,13 +97,16 @@
         </select>
         <input type="submit" name="viewRecently" value="View Recent Posts"/>
 
+    </form>
         <br><br>
-
+        <form action="DownloadServlet" method="post" enctype="multipart/form-data">
         <button type="button">Download!</button>
+            <input type="submit" name="download1" value="download attachment">
+        </form>
         <button type="button">Clear Chat!</button>
         <button type="button">???!</button>
 
-    </form>
+
 
 
     <p>Logged in</p>

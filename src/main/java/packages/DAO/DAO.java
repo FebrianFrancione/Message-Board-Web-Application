@@ -621,4 +621,43 @@ public class DAO {
         }
 
     }
+
+//    public String getFileName(int postID, int attachmentID){
+//        String fileName = null;
+//        Connection connection = DBConnection.getConnection();
+//
+//       /* try {
+//            PreparedStatement ps = null;
+//            if (text.length() != 0 && inputStream.available() == 0 && tags.length() == 0) {
+//                ps = connection.prepareStatement("UPDATE posts SET text=?, lastUpdated=? WHERE postID=" + postID + " AND userID=" + userID);
+//                ps.setString(1, text);
+//                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+//            } else if (text.length() != 0 && inputStream.available() != 0 && tags.length() == 0) {
+//
+//            }*/
+//       try{
+//           PreparedStatement ps = null;
+//           ps = connection.prepareStatement("select")
+//       }catch(SQLException e){
+//           e.printStackTrace();
+//       }
+//        String sql = "select attachment_name from attachments where attachment_ID=? and post_ID=?";
+//
+//        ResultSet rs = null;
+//        try{
+//            ps.setInt(1,attachmentID);
+//            ps.setInt(2,postID);
+//
+//            rs = ps.executeQuery();
+//            while (rs.next()){
+//                fileName = rs.getString("attachment_name");
+//            }
+//
+//        }catch(SQLException e){
+//            e.printStackTrace();
+//        }finally {
+//            util.close();
+//        }
+//        return fileName;
+//    }
 }

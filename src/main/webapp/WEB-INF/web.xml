@@ -56,8 +56,17 @@
         <servlet-name>LogoutServlet</servlet-name>
 <!--        <url-pattern>/admin/LogoutServlet</url-pattern>-->
         <url-pattern>/LogoutServlet</url-pattern>
-
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>DownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/DownloadServlet</url-pattern>
+    </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>main.jsp</welcome-file>

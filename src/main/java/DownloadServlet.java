@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DownloadServlet extends HttpServlet {
 
     // size of byte buffer to send file
-    private static final int BUFFER_SIZE = 4096;
+    private static final int BUFFER_SIZE =1024*10;
 
     // database connection settings
     private String dbURL = "jdbc:mysql://127.0.0.1:3306/messageboard?user=root";
@@ -48,11 +48,12 @@ public class DownloadServlet extends HttpServlet {
             stmt = (Statement) conn.createStatement();
 
             //request the file Blob and the FileName from the DB
-            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
+//            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
+            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + 20);
 
             if (rs1.next()) {
                 // get the file name
-                fileName = rs1.getString("file_name");
+                fileName = rs1.getString("fileName");
                 //get the blob
                 blob = rs1.getBlob("file");
 
@@ -85,6 +86,7 @@ public class DownloadServlet extends HttpServlet {
                 }
 
                 inputStream.close();
+                outStream.flush();
                 outStream.close();
 
                 /*
@@ -113,8 +115,23 @@ public class DownloadServlet extends HttpServlet {
             }
         }
     }
+/*
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            int postID = Integer.parseInt(request.getParameter("postId"));
+            int attachmentID = Integer.parseInt(request.getParameter("attachmentId"));
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            DAO upd = new DAO();
+            String fileName = upd.getFileName(postID, attachmentID);
+            response.setContentType(upd.getContentType(postID, attachmentID));
+            response.setHeader("Content-Disposition", "attachment; fileName= " + fileName);
+
+            OutputStream out = response.getOutputStream();
+
+            upd.downloadFile(postID, attachmentID, fileName, out);
+
+
+        }*/
+
 //        Blob image = null;
 //        Connection con = null;
 //        Statement stmt = null;
@@ -157,7 +174,6 @@ public class DownloadServlet extends HttpServlet {
 //            } catch (SQLException e) {
 //                e.printStackTrace();
 //            }
-//        }
-    }
+//
 }
 
