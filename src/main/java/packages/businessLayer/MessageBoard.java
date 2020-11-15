@@ -229,22 +229,14 @@ public class MessageBoard {
 
         try {
 
-            //get conn to DB
-            conn = DBConnection.getConnection();
+            Object[] fileData = daoObj.getFileInfo(fileID);
 
-            System.out.println("db connected");
 
-            stmt = (Statement) conn.createStatement();
-
-            //request the file Blob and the FileName from the DB
-//            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
-            ResultSet rs1 = stmt.executeQuery("select file,fileName from files where fileID = " + fileID);
-
-            if (rs1.next()) {
+            if (fileData != null) {
                 // get the file name
-                fileName = rs1.getString("fileName");
+                fileName = (String) fileData[2];
                 //get the blob
-                blob = rs1.getBlob("file");
+                blob = (Blob) fileData[0];
 
                 InputStream inputStream = blob.getBinaryStream();
 
