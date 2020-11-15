@@ -624,6 +624,36 @@ public class DAO {
 
     }
 
+    public Object[] getFileInfo(String fileID){
+
+        Connection connection = DBConnection.getConnection();
+        Object[] out = new Object[5];
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT file, date, fileName, fileSize, fileType FROM files WHERE fileID =  " + fileID);
+
+            if(rs.next())
+            {
+                out[0] = rs.getBlob(1);
+                out[1] = rs.getDate(2);
+                out[2] = rs.getString(3);
+                out[3] = rs.getInt(4);
+                out[4] = rs.getString(5);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return out;
+    }
+
 //    public String getFileName(int postID, int attachmentID){
 //        String fileName = null;
 //        Connection connection = DBConnection.getConnection();
