@@ -67,7 +67,7 @@ public class DAO {
 
     //for jstl, simply take all the posts from post Db and send as arrayList - placeholder. Once functional, must add files too.
     public List<Post> listAllPosts() throws SQLException {
-        List<Post> listPost = new ArrayList<>();
+        List<Post> listBook = new ArrayList<>();
 
         String sql = "SELECT * FROM posts";
         Connection connection = DBConnection.getConnection();
@@ -79,12 +79,12 @@ public class DAO {
             String userID1 = resultSet.getString("userID");
             String text = resultSet.getString("text");
             String attachmentSource = resultSet.getString("attachmentSource");
-            Date date = resultSet.getDate("date");
+            Timestamp postedDate = resultSet.getTimestamp("date");
             String tags = resultSet.getString("tags");
             Timestamp lastUpdated = resultSet.getTimestamp("lastUpdated");
 
-            Post post = new Post(postID,userID1,text,attachmentSource,date,tags,lastUpdated);
-            listPost.add(post);
+            Post post = new Post(postID,userID1,text,attachmentSource,postedDate,tags,lastUpdated);
+            listBook.add(post);
         }
 
         resultSet.close();
@@ -95,7 +95,7 @@ public class DAO {
         } catch(SQLException e){
             e.printStackTrace();
         }
-        return listPost;
+        return listBook;
     }
 
 

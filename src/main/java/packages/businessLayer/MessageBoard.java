@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import packages.database.DBConnection;
@@ -222,6 +223,21 @@ public class MessageBoard {
         }
         return out;
     }
+
+    public List<Post> listPost() throws SQLException {
+        List<Post> listPost = null;
+        DAO dao = new DAO();
+        listPost = dao.listAllPosts();
+
+        int counter = 0;
+//        for (Post post : listPost) {
+//
+//        }
+        return listPost;
+    }
+
+
+
 
     public ArrayList<Integer> retrievePostIDs() {
         ArrayList<Integer> IDs = new ArrayList<Integer>();

@@ -5,18 +5,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Books Store Application</title>
+    <title>List of Posts</title>
 </head>
 <body>
-<%--<center>--%>
-<%-- <h1>Books Management</h1>--%>
-<%--&lt;%&ndash; <h2>&ndash;%&gt;--%>
-<%--&lt;%&ndash; <a href="/new">Add New Book</a>&ndash;%&gt;--%>
-<%--&lt;%&ndash; &nbsp;&nbsp;&nbsp;&ndash;%&gt;--%>
-<%--&lt;%&ndash; <a href="/list">List All Books</a>&ndash;%&gt;--%>
-
-<%--&lt;%&ndash; </h2>&ndash;%&gt;--%>
-<%--</center>--%>
 <div align="center">
     <table border="1" cellpadding="5">
         <caption><h2>List of Posts</h2></caption>
@@ -41,6 +32,7 @@
 <%--                //displays nothing--%>
                 <td><c:out value="${post.lastUpdated}" /></td>
             </tr>
+<%--            <c:out value="${post.date}" />--%>
         </c:forEach>
     </table>
 </div>

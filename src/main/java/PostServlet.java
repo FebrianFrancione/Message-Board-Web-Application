@@ -1,5 +1,6 @@
 
 import packages.DAO.DAO;
+import packages.businessLayer.MessageBoard;
 import packages.businessLayer.Post;
 
 import java.io.IOException;
@@ -22,9 +23,15 @@ public class PostServlet extends HttpServlet {
             throws ServletException, IOException {
 // doGet(request, response);
         List<Post> listPost = null;
+//        try {
+//            DAO dao = new DAO();
+//            listPost = dao.listAllPosts();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+        MessageBoard msg = new MessageBoard();
         try {
-            DAO dao = new DAO();
-            listPost = dao.listAllPosts();
+            listPost = msg.listPost();
         } catch (SQLException e) {
             e.printStackTrace();
         }
