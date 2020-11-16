@@ -1,15 +1,29 @@
 
 package packages.DAO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import packages.businessLayer.Post;
 import packages.businessLayer.User;
 import packages.database.DBConnection;
 
+
 import java.awt.image.AreaAveragingScaleFilter;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+
 import java.io.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Arrays;
+
+import java.util.Iterator;
+import java.util.List;
+
 
 
 //the direct access object that performs the CRUD operations
@@ -17,37 +31,104 @@ import java.util.Arrays;
 //a table for users exists in the database with the columns: (userID, username, password)
 public class DAO {
     //insert user into user database table
-    public boolean insert(User user) {
+//    public boolean insert(User user) {
+//        Connection connection = DBConnection.getConnection();
+//
+//        try {
+//            String query = "INSERT INTO users (userID,username, password, email) VALUES (?,?, ?, ?)";
+//
+//            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+//            ps.setString(1,"5");
+//            ps.setString(2,user.getUsername());
+//            ps.setString(3, user.getPassword());
+//            ps.setString(4, user.getEmail());
+//
+//            int i = ps.executeUpdate();
+//
+//            if(i == 1) {
+//                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+//                    if (generatedKeys.next()) {
+//                        System.out.println(generatedKeys.getInt(1));
+//                        System.out.println("Inserted User in User table successful!");
+//                    }
+//                    else {
+//                        throw new SQLException("Inserting user failed");
+//                    }
+//                }
+//
+//                retrieveUserID(user);
+//                return true;
+//            }
+//
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        } finally {
+//            try {
+//                connection.close();
+//            } catch(SQLException e){
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return false;
+//    }
+
+
+    //for jstl, simply take all the posts from post Db and send as arrayList - placeholder. Once functional, must add files too.
+    public List<Post> listAllPosts() throws SQLException {
+        List<Post> listBook = new ArrayList<>();
+
+        String sql = "SELECT * FROM posts";
         Connection connection = DBConnection.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        while (resultSet.next()) {
+            int postID = resultSet.getInt("postID");
+            String userID1 = resultSet.getString("userID");
+            String text = resultSet.getString("text");
+            String attachmentSource = resultSet.getString("attachmentSource");
+            Timestamp postedDate = resultSet.getTimestamp("date");
+            String tags = resultSet.getString("tags");
+            Timestamp lastUpdated = resultSet.getTimestamp("lastUpdated");
+
+            Post post = new Post(postID,userID1,text,attachmentSource,postedDate,tags,lastUpdated);
+            listBook.add(post);
+        }
+
+        resultSet.close();
+        statement.close();
 
         try {
-            String query = "INSERT INTO users (userID,username, password, email) VALUES (?,?, ?, ?)";
+            connection.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return listBook;
+    }
 
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,"5");
-            ps.setString(2,user.getUsername());
-            ps.setString(3, user.getPassword());
-            ps.setString(4, user.getEmail());
+    //for jstl, adding files to the posts
+    public List<Post> retrieveAllFiles(List<Post> posts) {
+        Connection connection = DBConnection.getConnection();
+        int index = 0;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs2= stmt.executeQuery("SELECT * FROM files");
 
-            int i = ps.executeUpdate();
+            while(rs2.next()) {
+                int id = rs2.getInt("fileID");
+                Blob file = rs2.getBlob("file");
+                InputStream binaryStream = file.getBinaryStream();
 
-            if(i == 1) {
-                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        System.out.println(generatedKeys.getInt(1));
-                        System.out.println("Inserted User in User table successful!");
-                    }
-                    else {
-                        throw new SQLException("Inserting user failed");
+                for (int i = 0; i < posts.size(); i++) {
+                    if(posts.get(i).getPostID() == id ) {
+                        posts.get(i).setAttachment(binaryStream);
                     }
                 }
-
-                retrieveUserID(user);
-                return true;
             }
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             try {
                 connection.close();
@@ -55,9 +136,9 @@ public class DAO {
                 e.printStackTrace();
             }
         }
-
-        return false;
+        return posts;
     }
+
 
     //insert post into post database table
     public boolean insert(Post post) throws IOException {
@@ -158,35 +239,35 @@ public class DAO {
     }
 
     //update user in the user table.
-    public boolean update(User user) {
-        Connection connection = DBConnection.getConnection();
-
-        try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE users SET username=?, password=?, email=? WHERE userID=" + user.getUserID());
-
-            ps.setString(1,user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getEmail());
-
-            int i = ps.executeUpdate();
-
-            if(i == 1) {
-                System.out.println("updated user successfully");
-                return true;
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-        }
-
-        return false;
-    }
+//    public boolean update(User user) {
+//        Connection connection = DBConnection.getConnection();
+//
+//        try {
+//            PreparedStatement ps = connection.prepareStatement("UPDATE users SET username=?, password=?, email=? WHERE userID=" + user.getUserID());
+//
+//            ps.setString(1,user.getUsername());
+//            ps.setString(2, user.getPassword());
+//            ps.setString(3, user.getEmail());
+//
+//            int i = ps.executeUpdate();
+//
+//            if(i == 1) {
+//                System.out.println("updated user successfully");
+//                return true;
+//            }
+//
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        } finally {
+//            try {
+//                connection.close();
+//            } catch(SQLException e){
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return false;
+//    }
 
     //update post in the post table.
     public boolean update(int userID, int postID, String text, InputStream inputStream, String tags) {
@@ -311,7 +392,6 @@ public class DAO {
         return false;
     }
 
-
     //delete a file from the files table.
     public boolean deleteFile(int postID) {
         Connection connection = DBConnection.getConnection();
@@ -372,7 +452,7 @@ public class DAO {
     }
 
     //retrieve posts based on a search for user
-    public ArrayList<Post> searchPosts(String username) {
+    public ArrayList<Post> searchPosts(String username, ServletContext context) {
 
         int searchedUserID;
         Connection connection = DBConnection.getConnection();
@@ -380,10 +460,9 @@ public class DAO {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet query1 = statement.executeQuery("SELECT userID FROM users WHERE username="+"\""+username+"\"");
+            searchedUserID = retrieveUserID(username, context);
 
-            if(query1.next()){
-                searchedUserID = query1.getInt("userID");
+            if(searchedUserID != -1){
                 ResultSet query2 = statement.executeQuery("SELECT * FROM posts WHERE userID=" + searchedUserID);
 
                 while (query2.next()) {
@@ -523,6 +602,7 @@ public class DAO {
 //    }
 
     // retrieve posts based on a search of user, tag and date range
+
 //    public ArrayList<Post> searchAll (String username, String fromDate, String toDate, String tag){
 //
 //        int searchedUserID;
@@ -553,6 +633,7 @@ public class DAO {
 //        }
 //        return listOfAllSearchedPosts;
 //    }
+
 
     //retrieve files from files table and bind them to posts
     public ArrayList<Post> retrieveFiles(ArrayList<Post> posts) {
@@ -587,52 +668,63 @@ public class DAO {
     }
 
     //sets userID generated by DB for a specific user
-    public void retrieveUserID (User user) {
-        Connection connection = DBConnection.getConnection();
-
+    public int retrieveUserID (String username, ServletContext context) {
+        JSONParser parser = new JSONParser();
+        String parsedUser = "";
+        String parsedPassword = "";
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT userID FROM users WHERE username=" + user.getUsername());
+            Object obj = parser.parse(new FileReader(context.getRealPath("/WEB-INF/users.json")));
 
-            if(rs.next())
-            {
-                user.setUserID(rs.getInt("userID"));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray usersList = (JSONArray) jsonObject.get("Users List");
+
+            Iterator<JSONObject> iterator = usersList.iterator();
+            while(iterator.hasNext()) {
+                JSONObject userObj = iterator.next();
+                parsedUser = userObj.get("username").toString();
+                if (parsedUser.equals(username)){
+                    return Integer.parseInt(userObj.get("user-id").toString());
+                }
             }
-
-        } catch (SQLException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        return -1;
     }
 
     // retrieve the username with userID
-    public String retrieveUsername (int userID) {
-        Connection connection = DBConnection.getConnection();
-        String username = "";
+    public String retrieveUsername (int userID, ServletContext context) {
+        //read from json file
+        JSONParser parser = new JSONParser();
+        String parsedUser = "";
+        int parsedId = 0;
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT username FROM users WHERE userID=" + userID);
+            Object obj = parser.parse(new FileReader(context.getRealPath("/WEB-INF/users.json")));
+            System.out.println(context.getRealPath("/WEB-INF/users.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray usersList = (JSONArray) jsonObject.get("Users List");
 
-            if(rs.next())
-            {
-                username = rs.getString("username");
+            Iterator<JSONObject> iterator = usersList.iterator();
+            while(iterator.hasNext()) {
+                JSONObject userObj = iterator.next();
+                parsedUser = userObj.get("username").toString();
+                parsedId = Integer.parseInt(userObj.get("user-id").toString());
+                if (parsedId == userID){
+                    return userObj.get("username").toString();
+                }
             }
-
-        } catch (SQLException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return username;
+        return parsedUser;
     }
 
     //sets postID generated by DB for a specific post
@@ -662,37 +754,37 @@ public class DAO {
         return id;
     }
 
-    public User verifyPassword(User user){
-        Connection connection = DBConnection.getConnection();
-        String password = user.getPassword();
-        String username = user.getUsername();
-        User returnUser = null;
-        try {
-            Statement stmt = connection.createStatement();
-//            ResultSet rs = stmt.executeQuery("SELECT userID, email FROM users WHERE username = '" +username + "' AND password = '" + password + "';" );
-            ResultSet rs = stmt.executeQuery("SELECT userID FROM users WHERE username = '" +username + "' AND password = '" + password + "';" );
-
-            String ans;
-            if(rs.next())
-            {
-                returnUser = new User(username,password);
-                returnUser.setUserID(rs.getInt("userID"));
-//                returnUser.setEmail(rs.getNString("email"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-                return returnUser;
-            } catch(SQLException e){
-                e.printStackTrace();
-                return returnUser;
-            }
-        }
-
-    }
+//    public User verifyPassword(User user){
+//        Connection connection = DBConnection.getConnection();
+//        String password = user.getPassword();
+//        String username = user.getUsername();
+//        User returnUser = null;
+//        try {
+//            Statement stmt = connection.createStatement();
+////            ResultSet rs = stmt.executeQuery("SELECT userID, email FROM users WHERE username = '" +username + "' AND password = '" + password + "';" );
+//            ResultSet rs = stmt.executeQuery("SELECT userID FROM users WHERE username = '" +username + "' AND password = '" + password + "';" );
+//
+//            String ans;
+//            if(rs.next())
+//            {
+//                returnUser = new User(username,password);
+//                returnUser.setUserID(rs.getInt("userID"));
+////                returnUser.setEmail(rs.getNString("email"));
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                connection.close();
+//                return returnUser;
+//            } catch(SQLException e){
+//                e.printStackTrace();
+//                return returnUser;
+//            }
+//        }
+//
+//    }
 
     public Object[] getFileInfo(String fileID){
 
@@ -722,6 +814,36 @@ public class DAO {
         }
 
         return out;
+    }
+
+    public int verifyUser(String username, String password, ServletContext context) {
+        //read from json file
+        JSONParser parser = new JSONParser();
+        String parsedUser = "";
+        String parsedPassword = "";
+        try {
+            Object obj = parser.parse(new FileReader(context.getRealPath("/WEB-INF/users.json")));
+
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray usersList = (JSONArray) jsonObject.get("Users List");
+
+            Iterator<JSONObject> iterator = usersList.iterator();
+            while(iterator.hasNext()) {
+                JSONObject userObj = iterator.next();
+                parsedUser = userObj.get("username").toString();
+                parsedPassword = userObj.get("hashed-password").toString();
+                if (parsedUser.equals(username) && parsedPassword.equals(password)){
+                    return Integer.parseInt(userObj.get("user-id").toString());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 //    public String getFileName(int postID, int attachmentID){
