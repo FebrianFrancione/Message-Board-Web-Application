@@ -12,9 +12,10 @@ The files use varying-length binary strings or BLOBS. The application functional
 add File attachments, download File attachments and User authentication. Languages used: Java, Html, Css. Jsp and Jstl are used for displaying data to front-end.
 Release Notes: 
 MySql and Mysql workbench: 
+https://dev.mysql.com/downloads/workbench/
+https://www.mysql.com/downloads/
 
 Jstl tags:
-
-protobuf: 
-
+https://tomcat.apache.org/taglibs/standard/
 Mysql Connector:
+https://www.mysql.com/products/connector/
