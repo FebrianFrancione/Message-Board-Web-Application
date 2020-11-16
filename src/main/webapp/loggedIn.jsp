@@ -52,10 +52,13 @@
 
     <h1>Chat area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
-    <%! int i = 10; String reverse = "";%>
+    <%! int i = 10; String reverse = ""; ServletContext context = null;%>
     <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>
     <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
-    <%= msgboard.display(i, reverse)%>
+    <% if (request.getAttribute("context") != null) {context = (ServletContext) request.getAttribute("context");}else{context = null;} %>
+    <% if (context != null) { %>
+        <%=msgboard.display(i, reverse, context)%>
+    <%}%>
 
 
     <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
