@@ -1,4 +1,5 @@
 import packages.businessLayer.MessageBoard;
+import packages.businessLayer.Post;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -7,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet(name = "loginServlet")
 public class loginServlet extends HttpServlet {
@@ -18,7 +21,9 @@ public class loginServlet extends HttpServlet {
 
         MessageBoard mObj = new MessageBoard();
         ServletContext context = getServletContext();
-        int userID = mObj.verifyUser(username,password, context) ;
+        List<Post> listPost = null;
+        int userID = mObj.verifyUser(username,password, context);
+
         if(userID != -1){
             HttpSession oldSession = request.getSession(false);
             if (oldSession != null) {
@@ -32,6 +37,14 @@ public class loginServlet extends HttpServlet {
 
             newSession.setAttribute("userID",userID);
             //
+
+            try {
+                listPost = mObj.listPost(getServletContext(), "false");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            request.setAttribute("listPost", listPost);
             request.getSession().setAttribute("loggedInUser", userID);
             request.setAttribute("context", context);
             Cookie message = new Cookie("message", "Welcome");

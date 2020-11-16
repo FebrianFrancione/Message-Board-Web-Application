@@ -24,8 +24,10 @@ public class Post {
     private String fileType;
     private long fileSize;
     private String userID1;
-private ZonedDateTime date1;
-private String dateString;
+    private ZonedDateTime date1;
+    private String dateString;
+    private String imageString;
+    private String username;
 
     public String getDateString() {
         return dateString;
@@ -54,6 +56,7 @@ private String dateString;
 //        date1 = ZonedDateTime.parse(postedDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 //        dateString = date1.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         dateString = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss").format(postedDate);
+        this.date = postedDate;
         this.tags = tags;
         this.lastUpdated = lastUpdated;
     }
@@ -170,5 +173,21 @@ private String dateString;
 
     public String getTags() {
         return this.tags;
+    }
+
+    public void setImageString(String imageString) {
+        this.imageString = imageString;
+    }
+
+    public String getImageString() {
+        return this.imageString;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 }

@@ -15,7 +15,6 @@
             <th>postID</th>
             <th>user</th>
             <th>text</th>
-            <th>attachment</th>
             <th>Date</th>
             <th>tags</th>
             <th>lastUpdated</th>
@@ -26,7 +25,7 @@
                 <td><c:out value="${post.userID}" /></td>
                 <td><c:out value="${post.text}" /></td>
 <%--                //displays nothing--%>
-                <td><c:out value="${post.attachment}" /></td>
+<%--                <td><c:out value="${post.attachment}" /></td>--%>
                 <td><c:out value="${post.date}" /></td>
                 <td><c:out value="${post.tags}" /></td>
 <%--                //displays nothing--%>

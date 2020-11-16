@@ -98,6 +98,37 @@ public class DAO {
         return listBook;
     }
 
+    //for jstl, adding files to the posts
+    public List<Post> retrieveAllFiles(List<Post> posts) {
+        Connection connection = DBConnection.getConnection();
+        int index = 0;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs2= stmt.executeQuery("SELECT * FROM files");
+
+            while(rs2.next()) {
+                int id = rs2.getInt("fileID");
+                Blob file = rs2.getBlob("file");
+                InputStream binaryStream = file.getBinaryStream();
+
+                for (int i = 0; i < posts.size(); i++) {
+                    if(posts.get(i).getPostID() == id ) {
+                        posts.get(i).setAttachment(binaryStream);
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return posts;
+    }
 
 
     //insert post into post database table
@@ -351,7 +382,6 @@ public class DAO {
 
         return false;
     }
-
 
     //delete a file from the files table.
     public boolean deleteFile(int postID) {

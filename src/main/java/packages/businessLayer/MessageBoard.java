@@ -90,38 +90,38 @@ public class MessageBoard {
     }
 
     // display searched items
-    public String search(String option, String username, String fromDate, String toDate, String tag, int i, String reverse, ServletContext context) throws IOException {
+    public List<Post> search(String option, String username, String fromDate, String toDate, String tag, int i, String reverse, ServletContext context) throws IOException, SQLException {
         System.out.println(option + " " + username +" " + fromDate +" " + toDate +" " + tag +" " + i +" " + reverse+ " " +context);
         String out = "";
 
         if (option == null) {
             if(reverse == null) {
-                out = display(i, "true", context);
-                return out;
+                //out = display(i, "true", context);
+                return listPost(context, "true");
             }
             else{
-                out = display(i, reverse, context);
-                return out;
+                //out = display(i, reverse, context);
+                return listPost(context, reverse);
             }
         }
         if (option != null && username == null  && fromDate == null && toDate == null && tag == null){
             if(reverse == null){
-                out = display(i, "true", context);
-                return out;
+                //out = display(i, "true", context);
+                return listPost(context, "true");
             }
             else{
-                out = display(i, reverse, context);
-                return out;
+                //out = display(i, reverse, context);
+                return listPost(context, reverse);
             }
         }
 
         if (fromDate == null && toDate != null){
             if(option != null && reverse == null){
-                out = display(i, "true", context);
-                return out;
+                //out = display(i, "true", context);
+                return listPost(context, "true");
             }else if (option != null && reverse != null){
-                out = display(i, reverse, context);
-                return out;
+                //out = display(i, reverse, context);
+                return listPost(context, reverse);
             }
         }
         if (fromDate != null && toDate == null){}
@@ -129,114 +129,46 @@ public class MessageBoard {
         ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag, context);
         ArrayList<Post> filesSearchedAllPosts = daoObj.retrieveFiles(searchedAllPosts);
 
-        String lastUpdated = "";
-
         if (searchedAllPosts != null) {
             if (reverse.equals("true")) {
                 Collections.reverse(filesSearchedAllPosts);
             }
         }
 
-        if (searchedAllPosts != null) {
-            System.out.println("not null");
-            int counter = 0;
-            for (Post post : filesSearchedAllPosts) {
-                if (counter == i) {
-                    break;
-                }
-                lastUpdated = "";
-                if (post.getLastUpdated() != null) {
-                    lastUpdated += "Last Updated: " + post.getLastUpdated();
-                }
-
-                out += "" +
-                        "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
-                        "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">" +
-                        "<div>Username: " + daoObj.retrieveUsername(post.getUserID(), context) + "</div>" +
-                        "<div>Post id: " + post.getPostID() + "</div>" +
-                        "</div>" +
-                        "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
-                        "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
-                        "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
-
-                BufferedImage image = null;
-
-                if (post.getAttachment() != null) {
-                    byte[] imageBytes = new byte[(int) post.getAttachment().available()];
-                    post.getAttachment().read(imageBytes, 0, imageBytes.length);
-                    String imageString = Base64.encodeBase64String(imageBytes);
-                    out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"data:image/jpeg;base64, " + imageString + "\"></div></div>";
-                } else {
-                    out += "</div>";
-                }
-                counter++;
+        for (Post post: searchedAllPosts) {
+            if (post.getAttachment() != null) {
+                byte[] imageBytes = new byte[(int) post.getAttachment().available()];
+                post.getAttachment().read(imageBytes, 0, imageBytes.length);
+                String imageString = Base64.encodeBase64String(imageBytes);
+                post.setImageString(imageString);
             }
         }
-        return out;
+
+        return searchedAllPosts;
     }
 
-    public void displayRecent() {
-        /*retreive posts in-order from database*/
-    }
 
-    public String display(int i, String reverse, ServletContext context) throws IOException {
-        String out = "";
-        ArrayList<Post> postsWithoutFiles = daoObj.retrievePosts();
-        ArrayList<Post> postsList = daoObj.retrieveFiles(postsWithoutFiles);
-        String lastUpdated = "";
+    public List<Post> listPost(ServletContext context, String reversed) throws SQLException, IOException {
+        List<Post> listPost = null;
+        listPost = daoObj.listAllPosts();
+        listPost = daoObj.retrieveAllFiles(listPost);
 
-        if (reverse.equals("true")) {
-            Collections.reverse(postsList);
+        if (reversed.equals("true")) {
+            Collections.reverse(listPost);
         }
 
-        int counter = 0;
-        for (Post post : postsList) {
-            if (counter == i) {
-                break;
-            }
-            lastUpdated = "";
-            if (post.getLastUpdated() != null) {
-                lastUpdated += "Last Updated: " + post.getLastUpdated();
-            }
-
-            out += "" +
-                    "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
-                    "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">" +
-                    "<div>Username: " + daoObj.retrieveUsername(post.getUserID(), context) + "</div>" +
-                    "<div>Post id: " + post.getPostID() + "</div>" +
-                    "</div>" +
-                    "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
-                    "<div class=\"post-tags\" style=\"margin-top: 20px; color: grey;\">" + post.getTags() + "</div>" +
-                    "<div class=\"post-date\" style=\"margin-top: 10px; font-size: 12px;\">" + post.getDate().toString() + "<br>" + lastUpdated + "</div>";
-
-            BufferedImage image = null;
+        for (Post post: listPost) {
+            post.setUsername(daoObj.retrieveUsername(post.getUserID(), context));
 
             if (post.getAttachment() != null) {
                 byte[] imageBytes = new byte[(int) post.getAttachment().available()];
                 post.getAttachment().read(imageBytes, 0, imageBytes.length);
                 String imageString = Base64.encodeBase64String(imageBytes);
-                out += "<div style=\"margin-top: 15px;\"><img style=\"width:200px; height: 250px;\" src=\"data:image/jpeg;base64, " + imageString + "\"></div></div>";
-            } else {
-                out += "</div>";
+                post.setImageString(imageString);
             }
-            counter++;
         }
-        return out;
-    }
-
-    public List<Post> listPost() throws SQLException {
-        List<Post> listPost = null;
-        DAO dao = new DAO();
-        listPost = dao.listAllPosts();
-
-        int counter = 0;
-//        for (Post post : listPost) {
-//
-//        }
         return listPost;
     }
-
-
 
 
     public ArrayList<Integer> retrievePostIDs() {

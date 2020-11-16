@@ -19,22 +19,16 @@ public class PostServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-// doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Post> listPost = null;
-//        try {
-//            DAO dao = new DAO();
-//            listPost = dao.listAllPosts();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
         MessageBoard msg = new MessageBoard();
+
         try {
-            listPost = msg.listPost();
+            listPost = msg.listPost(getServletContext(), "false");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         request.setAttribute("listPost", listPost);
         RequestDispatcher dispatcher = request.getRequestDispatcher("postList.jsp");
         dispatcher.forward(request, response);
