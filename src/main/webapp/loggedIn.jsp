@@ -124,13 +124,19 @@
 
 
 
+    <div style="text-align: center;">
+        <h2>
+            <form action="PostServlet" method="post">
 
+<%--                <a href="/PostServlet">List All Books</a>--%>
+                <input type="submit" value="list all Posts">
+            </form>
+        </h2>
+    </div>
 
     <p>Logged in</p>
     <p><%=message%></p>
-    <p>Session ID = <%=sessionID %></p>
-
-
+<%--    <p>Session ID = <%=sessionID %></p>--%>
 
 </main>
 <%--<c:if test="${not empty loggedInUser}">--%>

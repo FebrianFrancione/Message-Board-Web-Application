@@ -14,6 +14,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 //the direct access object that performs the CRUD operations
@@ -62,6 +63,42 @@ public class DAO {
 //
 //        return false;
 //    }
+
+
+    //for jstl, simply take all the posts from post Db and send as arrayList - placeholder. Once functional, must add files too.
+    public List<Post> listAllPosts() throws SQLException {
+        List<Post> listPost = new ArrayList<>();
+
+        String sql = "SELECT * FROM posts";
+        Connection connection = DBConnection.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        while (resultSet.next()) {
+            int postID = resultSet.getInt("postID");
+            String userID1 = resultSet.getString("userID");
+            String text = resultSet.getString("text");
+            String attachmentSource = resultSet.getString("attachmentSource");
+            Date date = resultSet.getDate("date");
+            String tags = resultSet.getString("tags");
+            Timestamp lastUpdated = resultSet.getTimestamp("lastUpdated");
+
+            Post post = new Post(postID,userID1,text,attachmentSource,date,tags,lastUpdated);
+            listPost.add(post);
+        }
+
+        resultSet.close();
+        statement.close();
+
+        try {
+            connection.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return listPost;
+    }
+
+
 
     //insert post into post database table
     public boolean insert(Post post) throws IOException {

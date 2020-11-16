@@ -19,6 +19,22 @@ public class Post {
     private String originalFileName;
     private String fileType;
     private long fileSize;
+    private String userID1;
+
+
+
+    private String attachmentSource;
+
+    //used for jstl
+    public Post(int postID,String userID1, String text,String attachmentSource, Date date, String tags, Timestamp lastUpdated){
+        this.postID = postID;
+        this.userID1 = userID1;
+        this.text = text;
+        this.attachmentSource = attachmentSource;
+        this.date = date;
+        this.tags = tags;
+        this.lastUpdated = lastUpdated;
+    }
 
     public Post(int userID, String text, InputStream file, Date date, String tags, String fileName, long size, String type) {
         this.userID = userID;
@@ -30,6 +46,34 @@ public class Post {
         this.originalFileName = fileName;
         this.fileSize = size;
         this.fileType = type;
+    }
+
+
+    public Post(int postID, int userID, String text, InputStream file, Date date, String tags){
+        this.postID = postID;
+        this.userID = userID;
+        this.text = text;
+        this.attachment = file;
+        this.date = date;
+        this.updated = false;
+        this.tags = tags;
+    }
+
+
+    public String getUserID1() {
+        return userID1;
+    }
+
+    public void setUserID1(String userID1) {
+        this.userID1 = userID1;
+    }
+
+    public String getAttachmentSource() {
+        return attachmentSource;
+    }
+
+    public void setAttachmentSource(String attachmentSource) {
+        this.attachmentSource = attachmentSource;
     }
 
     public String getOriginalFileName() {
@@ -52,15 +96,7 @@ public class Post {
         return this.lastUpdated;
     }
 
-    public Post(int postID, int userID, String text, InputStream file, Date date, String tags){
-        this.postID = postID;
-        this.userID = userID;
-        this.text = text;
-        this.attachment = file;
-        this.date = date;
-        this.updated = false;
-        this.tags = tags;
-    }
+
 
     public void setText(String text) {
         this.text = text;
