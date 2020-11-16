@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>About</title>
+    <title>Chatr00m - About</title>
     <script src="https://kit.fontawesome.com/f41ca6203f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>

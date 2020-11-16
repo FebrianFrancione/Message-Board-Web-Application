@@ -133,9 +133,9 @@
             <div style="margin-top: 15px;"><img style="width:200px; height: 250px;" src="data:image/jpeg;base64,${post.imageString}" alt="no attachment"></div>
         </div>
     </c:forEach>
-    <p>Logged in</p>
+<%--    <p>Logged in</p>--%>
 
-    <p>Session ID = <%=sessionID %></p>
+<%--    <p>Session ID = <%=sessionID %></p>--%>
 
 </main>
 
