@@ -148,7 +148,6 @@
     </form>
     <a href="file_list.jsp">View List</a>
     <button type="button">Clear Chat!</button>
-    <button type="button">???!</button>
 
 
 
@@ -156,8 +155,6 @@
     <div style="text-align: center;">
         <h2>
             <form action="PostServlet" method="post">
-
-                <%--                <a href="/PostServlet">List All Books</a>--%>
                 <input type="submit" value="list all Posts">
             </form>
         </h2>

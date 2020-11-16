@@ -5,7 +5,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>List of Posts</title>
+    <title>Chatr00m - Posts</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
+
 </head>
 <body>
 <div align="center">

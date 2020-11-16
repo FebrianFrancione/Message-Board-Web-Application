@@ -14,7 +14,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Title</title>
+    <title>Chatr00m - files</title>
     <style>
         tr,td,th{
             padding:20px;
