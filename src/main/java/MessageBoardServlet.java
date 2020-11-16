@@ -84,6 +84,7 @@ public class MessageBoardServlet extends HttpServlet {
                 }
             }
             System.out.println(numberOfPostsToDisplay);
+            request.setAttribute("context", getServletContext());
             request.setAttribute("recentPosts", reverse);
             request.setAttribute("numberOfPosts", numberOfPostsToDisplay);
             RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");

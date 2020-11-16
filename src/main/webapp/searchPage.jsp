@@ -51,11 +51,28 @@
 
     <h1>Search area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
-    <%! int i = 10; String reverse = "";%>
+    <%! int i = 10;
+        String reverse = "";
+        String option = "";
+        String username = "";
+        String dateRangeFrom = "";
+        String dateRangeTo = "";
+        String tag = "";
+        String dateSort = "";
+        ServletContext context = null;
+    %>
     <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
+    <% if (request.getAttribute("option") != null) {option = request.getAttribute("option").toString();}else{option = null;} %>
+    <% if (request.getAttribute("username") != null) {username = request.getAttribute("username").toString();}else{username = null;} %>
+    <% if (request.getAttribute("dateRangeFrom") != null) {dateRangeFrom = request.getAttribute("dateRangeFrom").toString();}else{dateRangeFrom = null;} %>
+    <% if (request.getAttribute("dateRangeTo") != null) {dateRangeTo = request.getAttribute("dateRangeTo").toString();}else{dateRangeTo = null;} %>
+    <% if (request.getAttribute("tag") != null) {tag = request.getAttribute("tag").toString();}else{tag = null;} %>
+    <% if (request.getAttribute("dateSort") != null) {dateSort = request.getAttribute("dateSort").toString();}else{dateSort = null;} %>
+    <% if (request.getAttribute("context") != null) {context = (ServletContext) request.getAttribute("context");}else{context = null;} %>
 
 
-    <form action="searchPage.jsp" method="get" enctype="multipart/form-data">
+
+    <form action="SearchServlet" method="post">
         <div>
             <label for="searchUser">Search for Post by User:</label>
             <input type="text" placeholder="Search.." name="searchUsername">
@@ -98,19 +115,12 @@
                 <input type="submit">
                 <input type="reset" value="Clear the textfields">
             </div>
-
-
-        <% String username = request.getParameter("searchUsername"); %>
-        <% String dateRangeFrom = request.getParameter("fromDate"); %>
-        <% String dateRangeTo = request.getParameter("toDate"); %>
-        <% String tag = request.getParameter("searchByTags"); %>
-        <% String option = request.getParameter("searchOption"); %>
-        <% String dateSort = request.getParameter("dateSorting"); %>
-
     </form>
     <br>
 
-    <%= msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, 100, dateSort) %>
+    <% if (context != null) { %>
+            <%=msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, 100, dateSort, context)%>
+    <%}%>
 
     <p>Logged in</p>
 

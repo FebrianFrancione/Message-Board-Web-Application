@@ -1,8 +1,12 @@
 package packages.businessLayer;
 
-import packages.DAO.DAO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;import packages.DAO.DAO;
 
 import javax.imageio.ImageIO;
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 //import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
+
 import org.apache.commons.codec.binary.Base64;
 import packages.database.DBConnection;
 
@@ -33,22 +39,22 @@ public class MessageBoard {
 //        daoObj.retrieveUserID(username,password);
 //    }
     //Sign up functionality not to be implemented
-    public void signUp(String username, String password) {
-        User newUser = new User(username, password);
-
-        /*insert into database*/
-        daoObj.insert(newUser);
-    }
+//    public void signUp(String username, String password) {
+//        User newUser = new User(username, password);
+//
+//        /*insert into database*/
+//        daoObj.insert(newUser);
+//    }
 
     //modify account functionality not to be implemented
-    public void modifyAccount(User user, String username, String password, String email) {
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-
-        /*update user in database*/
-        daoObj.update(user);
-    }
+//    public void modifyAccount(User user, String username, String password, String email) {
+//        user.setUsername(username);
+//        user.setPassword(password);
+//        user.setEmail(email);
+//
+//        /*update user in database*/
+//        daoObj.update(user);
+//    }
 
     public void createPost(int userID, String text, InputStream att, String tags, String fileName, long size, String fileType) throws IOException {
         Date date = new Timestamp(System.currentTimeMillis());
@@ -65,61 +71,61 @@ public class MessageBoard {
         daoObj.update(userID, postID, text, inputStream, tags);
     }
 
-    public ArrayList<Post> searchCases(String option, String username, String fromDate, String toDate, String tag) {
+    public ArrayList<Post> searchCases(String option, String username, String fromDate, String toDate, String tag, ServletContext context) {
 
         if (option instanceof String) {
             switch (option) {
                 case "searchUser":
-                    return daoObj.searchPosts(username);
+                    return daoObj.searchPosts(username, context);
                 case "searchByDate":
                     return daoObj.searchByDates(fromDate, toDate);
                 case "searchByTags":
                     return daoObj.searchByTags(tag);
                 case "searchAll":
-                    return daoObj.searchAll(username, fromDate, toDate, tag);
+                    return daoObj.searchAll(username, fromDate, toDate, tag, context);
             }
         }
         return null;
     }
 
     // display searched items
-    public String search(String option, String username, String fromDate, String toDate, String tag, int i, String reverse) throws IOException {
-        System.out.println(option + username + fromDate + toDate + tag + i + reverse);
+    public String search(String option, String username, String fromDate, String toDate, String tag, int i, String reverse, ServletContext context) throws IOException {
+        System.out.println(option + " " + username +" " + fromDate +" " + toDate +" " + tag +" " + i +" " + reverse+ " " +context);
         String out = "";
 
         if (option == null) {
             if(reverse == null) {
-                out = display(i, "true");
+                out = display(i, "true", context);
                 return out;
             }
             else{
-                out = display(i, reverse);
+                out = display(i, reverse, context);
                 return out;
             }
         }
         if (option != null && username == null  && fromDate == null && toDate == null && tag == null){
             if(reverse == null){
-                out = display(i, "true");
+                out = display(i, "true", context);
                 return out;
             }
             else{
-                out = display(i, reverse);
+                out = display(i, reverse, context);
                 return out;
             }
         }
 
         if (fromDate == null && toDate != null){
             if(option != null && reverse == null){
-                out = display(i, "true");
+                out = display(i, "true", context);
                 return out;
             }else if (option != null && reverse != null){
-                out = display(i, reverse);
+                out = display(i, reverse, context);
                 return out;
             }
         }
         if (fromDate != null && toDate == null){}
 
-        ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag);
+        ArrayList<Post> searchedAllPosts = searchCases(option, username, fromDate, toDate, tag, context);
         ArrayList<Post> filesSearchedAllPosts = daoObj.retrieveFiles(searchedAllPosts);
 
         String lastUpdated = "";
@@ -131,6 +137,7 @@ public class MessageBoard {
         }
 
         if (searchedAllPosts != null) {
+            System.out.println("not null");
             int counter = 0;
             for (Post post : filesSearchedAllPosts) {
                 if (counter == i) {
@@ -144,7 +151,7 @@ public class MessageBoard {
                 out += "" +
                         "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
                         "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">" +
-                        "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                        "<div>Username: " + daoObj.retrieveUsername(post.getUserID(), context) + "</div>" +
                         "<div>Post id: " + post.getPostID() + "</div>" +
                         "</div>" +
                         "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
@@ -171,7 +178,7 @@ public class MessageBoard {
         /*retreive posts in-order from database*/
     }
 
-    public String display(int i, String reverse) throws IOException {
+    public String display(int i, String reverse, ServletContext context) throws IOException {
         String out = "";
         ArrayList<Post> postsWithoutFiles = daoObj.retrievePosts();
         ArrayList<Post> postsList = daoObj.retrieveFiles(postsWithoutFiles);
@@ -194,7 +201,7 @@ public class MessageBoard {
             out += "" +
                     "<div class=\"post\" style=\"margin: 0 20px; padding: 10px;\" id=" + post.getUserID() + ">" +
                     "<div class=\"post-ids\" style=\"display: flex; flex-direction: row; justify-content: space-between;\">" +
-                    "<div>Username: " + daoObj.retrieveUsername(post.getUserID()) + "</div>" +
+                    "<div>Username: " + daoObj.retrieveUsername(post.getUserID(), context) + "</div>" +
                     "<div>Post id: " + post.getPostID() + "</div>" +
                     "</div>" +
                     "<div class=\"post-body\" style=\"font-size: 20px; margin-top: 20px;\">" + post.getText() + "</div>" +
@@ -224,7 +231,7 @@ public class MessageBoard {
         return IDs;
     }
 
-    public int verifyUser(String username, String password) {
+    public int verifyUser(String username, String password, ServletContext context) throws FileNotFoundException {
 
         MessageDigest digest = null;
         try {
@@ -238,14 +245,8 @@ public class MessageBoard {
 
         //converting byte array to String of hex
         String hashedpass = DatatypeConverter.printHexBinary(encodedhash);
-        User temp = new User(username, hashedpass);
 
-        User returned = daoObj.verifyPassword(temp);
-
-        if (returned != null) {
-            return returned.getUserID();
-        }
-        return -1;
+        return daoObj.verifyUser(username, hashedpass, context);
     }
 
     public void download(String fileID, ServletContext context, HttpServletResponse response, int BufferSize) {
