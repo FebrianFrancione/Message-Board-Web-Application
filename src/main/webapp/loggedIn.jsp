@@ -52,13 +52,27 @@
 
     <h1>Chat area</h1>
     <%! MessageBoard msgboard = new MessageBoard(); %>
-    <%! int i = 10; String reverse = ""; ServletContext context = null;%>
+    <%! int i = 10; String reverse = ""; ServletContext context = null; int postLimit = 0;%>
     <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>
     <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
     <% if (request.getAttribute("context") != null) {context = (ServletContext) request.getAttribute("context");}else{context = null;} %>
-    <% if (context != null) { %>
-        <%=msgboard.display(i, reverse, context)%>
-    <%}%>
+    <% postLimit = 0;%>
+        <c:forEach var="post" items="${listPost}">
+            <% if (postLimit < i) {%>
+                <div class="post" style="margin: 0 20px; padding: 10px;" id="${post.userID}">
+                    <div class="post-ids" style="display: flex; flex-direction: row; justify-content: space-between;">
+                        <div>Username: ${post.username} </div>
+                        <div>Post id: ${post.postID} </div>
+                    </div>
+                    <div class="post-body" style="font-size: 20px; margin-top: 20px;"> ${post.text} </div>
+                    <div class="post-tags" style="margin-top: 20px; color: grey;"> ${post.tags} </div>
+                    <div class="post-date" style="margin-top: 10px; font-size: 12px;"> ${post.date} <br> Last Updated: ${post.lastUpdated} </div>
+                    <div style="margin-top: 15px;"><img style="width:200px; height: 250px;" src="data:image/jpeg;base64,${post.imageString}" alt="no attachment"></div>
+                </div>
+                <%postLimit ++;%>
+            <%}%>
+        </c:forEach>
+    </table>
 
 
     <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">

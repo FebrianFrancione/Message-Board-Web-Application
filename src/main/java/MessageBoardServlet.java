@@ -18,9 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 
 @WebServlet(name="MessageBoardServlet")
@@ -37,6 +39,18 @@ public class MessageBoardServlet extends HttpServlet {
         if(userID != null){
             // the message board object is our business layer object that is responsible for manipulating the data
             MessageBoard msgBoard = new MessageBoard();
+            List<Post> listPost = null;
+            int defaultNumberOfPostsToDisplay = 0;
+
+            InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            String line = null;
+            while((line = in.readLine()) != null) {
+                System.out.println(line);
+                if (line.indexOf("displayed_posts:") != -1) {
+                    defaultNumberOfPostsToDisplay = Integer.parseInt(line.split(": ")[1].replace(" ", ""));
+                }
+            }
 
             if (request.getPart("create") != null) {
                 String text = request.getParameter("message");
@@ -65,35 +79,31 @@ public class MessageBoardServlet extends HttpServlet {
             }
 
             String reverse = "false";
-            int numberOfPostsToDisplay = 0;
             if (request.getPart("viewRecently") != null) {
                 reverse = "true";
 
                 if (!request.getParameter("numberOfPosts").equals("")) {
-                    numberOfPostsToDisplay = Integer.parseInt(request.getParameter("numberOfPosts"));
+                    defaultNumberOfPostsToDisplay = Integer.parseInt(request.getParameter("numberOfPosts"));
                 }
             }
 
-            InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
-            BufferedReader in = new BufferedReader(new InputStreamReader(input));
-            String line = null;
-            while((line = in.readLine()) != null) {
-                System.out.println(line);
-                if (line.indexOf("displayed_posts:") != -1) {
-                    numberOfPostsToDisplay = Integer.parseInt(line.split(": ")[1].replace(" ", ""));
-                }
+            try {
+                listPost = msgBoard.listPost(getServletContext(), reverse);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            System.out.println(numberOfPostsToDisplay);
+
+            request.setAttribute("listPost", listPost);
             request.setAttribute("context", getServletContext());
             request.setAttribute("recentPosts", reverse);
-            request.setAttribute("numberOfPosts", numberOfPostsToDisplay);
+            request.setAttribute("numberOfPosts", defaultNumberOfPostsToDisplay);
             RequestDispatcher rd = request.getRequestDispatcher("loggedIn.jsp");
             //response.sendRedirect("loggedIn.jsp");
             rd.forward(request, response);
 
         }else{
-RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
-rd.include(request, response);
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+            rd.include(request, response);
         }
 
         String action = request.getParameter("action");

@@ -118,10 +118,21 @@
     </form>
     <br>
 
-    <% if (context != null) { %>
-            <%=msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, 100, dateSort, context)%>
-    <%}%>
-
+<%--    <% if (context != null) { %>--%>
+<%--            <%=msgboard.search(option, username, dateRangeFrom, dateRangeTo, tag, 100, dateSort, context)%>--%>
+<%--    <%}%>--%>
+    <c:forEach var="post" items="${listPost}">
+        <div class="post" style="margin: 0 20px; padding: 10px;" id="${post.userID}">
+            <div class="post-ids" style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div>Username: ${post.username} </div>
+                <div>Post id: ${post.postID} </div>
+            </div>
+            <div class="post-body" style="font-size: 20px; margin-top: 20px;"> ${post.text} </div>
+            <div class="post-tags" style="margin-top: 20px; color: grey;"> ${post.tags} </div>
+            <div class="post-date" style="margin-top: 10px; font-size: 12px;"> ${post.date} <br> Last Updated: ${post.lastUpdated} </div>
+            <div style="margin-top: 15px;"><img style="width:200px; height: 250px;" src="data:image/jpeg;base64,${post.imageString}" alt="no attachment"></div>
+        </div>
+    </c:forEach>
     <p>Logged in</p>
 
     <p>Session ID = <%=sessionID %></p>

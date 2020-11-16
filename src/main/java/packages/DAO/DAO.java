@@ -67,7 +67,7 @@ public class DAO {
 
     //for jstl, simply take all the posts from post Db and send as arrayList - placeholder. Once functional, must add files too.
     public List<Post> listAllPosts() throws SQLException {
-        List<Post> listPost = new ArrayList<>();
+        List<Post> listBook = new ArrayList<>();
 
         String sql = "SELECT * FROM posts";
         Connection connection = DBConnection.getConnection();
@@ -79,12 +79,12 @@ public class DAO {
             String userID1 = resultSet.getString("userID");
             String text = resultSet.getString("text");
             String attachmentSource = resultSet.getString("attachmentSource");
-            Date date = resultSet.getDate("date");
+            Timestamp postedDate = resultSet.getTimestamp("date");
             String tags = resultSet.getString("tags");
             Timestamp lastUpdated = resultSet.getTimestamp("lastUpdated");
 
-            Post post = new Post(postID,userID1,text,attachmentSource,date,tags,lastUpdated);
-            listPost.add(post);
+            Post post = new Post(postID,userID1,text,attachmentSource,postedDate,tags,lastUpdated);
+            listBook.add(post);
         }
 
         resultSet.close();
@@ -95,9 +95,40 @@ public class DAO {
         } catch(SQLException e){
             e.printStackTrace();
         }
-        return listPost;
+        return listBook;
     }
 
+    //for jstl, adding files to the posts
+    public List<Post> retrieveAllFiles(List<Post> posts) {
+        Connection connection = DBConnection.getConnection();
+        int index = 0;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs2= stmt.executeQuery("SELECT * FROM files");
+
+            while(rs2.next()) {
+                int id = rs2.getInt("fileID");
+                Blob file = rs2.getBlob("file");
+                InputStream binaryStream = file.getBinaryStream();
+
+                for (int i = 0; i < posts.size(); i++) {
+                    if(posts.get(i).getPostID() == id ) {
+                        posts.get(i).setAttachment(binaryStream);
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return posts;
+    }
 
 
     //insert post into post database table
@@ -351,7 +382,6 @@ public class DAO {
 
         return false;
     }
-
 
     //delete a file from the files table.
     public boolean deleteFile(int postID) {
