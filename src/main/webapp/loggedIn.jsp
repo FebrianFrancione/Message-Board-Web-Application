@@ -100,12 +100,9 @@
         <div class="post-box">
             <label for="deletePost">Select Post's ID to delete:</label>
             <select id="deletePost" name="deletePost">
-                <%! ArrayList<Integer> IDs = msgboard.retrievePostIDs();%>
-                <%
-                    for (int id: IDs) {
-                %> <option><%=id%></option> <%
-                }
-            %>
+                <c:forEach var="post" items="${listPost}">
+                    <option>${post.postID}</option>
+                </c:forEach>
             </select>
             <input type="submit" name="delete" value="Delete Post"/>
 
@@ -113,17 +110,16 @@
 
             <label for="updatePost">Select Post's ID to update:</label>
             <select id="updatePost" name="updatePost">
-                <%! ArrayList<Integer> postIDs = msgboard.retrievePostIDs();%>
-                <%
-                    for (int id: postIDs) {
-                %> <option><%=id%></option> <%
-                }
-            %>
+                <c:forEach var="post" items="${listPost}">
+                    <option>${post.postID}</option>
+                </c:forEach>
             </select>
             <div>
                 <label for="updatedMessage">Enter Desired Message Here</label>
                 <input id="updatedMessage" type="text" name="updatedMessage">
+                <br>
                 <label for="updatedTags">Enter Desired tags here</label>
+                <br>
                 <input id="updatedTags" type="text" name="updatedTags">
                 <input type="file" name="updatedAttachment" value="Add attachment">
                 <input class="btn3" type="submit" name="update" value="Update Post"/>
@@ -143,14 +139,9 @@
     </form>
     <br><br>
     <form action="DownloadServlet" method="post" enctype="multipart/form-data">
-        <button type="button">Download!</button>
         <input type="submit" name="download1" value="download attachment">
     </form>
     <a href="file_list.jsp">View List</a>
-    <button type="button">Clear Chat!</button>
-    <button type="button">???!</button>
-
-
 
 
     <div style="text-align: center;">

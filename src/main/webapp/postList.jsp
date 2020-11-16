@@ -22,7 +22,7 @@
         <c:forEach var="post" items="${listPost}">
             <tr>
                 <td><c:out value="${post.postID}" /></td>
-                <td><c:out value="${post.userID}" /></td>
+                <td><c:out value="${post.username}" /></td>
                 <td><c:out value="${post.text}" /></td>
 <%--                //displays nothing--%>
 <%--                <td><c:out value="${post.attachment}" /></td>--%>

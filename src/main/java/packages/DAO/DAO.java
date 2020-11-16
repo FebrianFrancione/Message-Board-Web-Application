@@ -467,6 +467,7 @@ public class DAO {
 
                 while (query2.next()) {
                     Post userPost = new Post(query2.getInt("postID"), query2.getInt("userID"), query2.getString("text"), null, (query2.getTimestamp("date")), query2.getString("tags"));
+                    userPost.setLastUpdated(query2.getTimestamp("lastUpdated"));
                     listOfSearchedPosts.add(userPost);
                 }
             }
@@ -495,6 +496,7 @@ public class DAO {
 
             while(query3.next()){
                 Post datePost = new Post(query3.getInt("postID"), query3.getInt("userID"), query3.getString("text"), null, (query3.getTimestamp("date")), query3.getString("tags"));
+                datePost.setLastUpdated(query3.getTimestamp("lastUpdated"));
                 listOfDatePosts.add(datePost);
             }
         } catch (SQLException e){
@@ -556,6 +558,7 @@ public class DAO {
                         for(int y = 0; y<tempList.size(); y++) {
                             int query2PostID = tempList.get(y).getPostID();
                             if (query1PostID == query2PostID) {
+                                tempList.get(y).setLastUpdated(tagQuery.getTimestamp("lastUpdated"));
                                 listOfTagPost.add(tempList.get(y));
                             }
                         }

@@ -46,74 +46,85 @@
 <%--<form action="LogoutServlet" method="post">--%>
 <%--    <input type="submit" value="Logout" >--%>
 <%--</form>--%>
-
-<hr>
 <main>
 
-    <h1>Chat area</h1>
+    <h1 class="h1-main">Chat area</h1>
+    <p>Logged in</p>
+    <p><%=message%></p>
     <%! MessageBoard msgboard = new MessageBoard(); %>
     <%! int i = 10; String reverse = ""; ServletContext context = null; int postLimit = 0;%>
     <% if (request.getAttribute("numberOfPosts") != null) {i = (int) request.getAttribute("numberOfPosts");} %>
     <% if (request.getAttribute("recentPosts") != null) {reverse = request.getAttribute("recentPosts").toString();}else{reverse = "false";} %>
     <% if (request.getAttribute("context") != null) {context = (ServletContext) request.getAttribute("context");}else{context = null;} %>
     <% postLimit = 0;%>
-        <c:forEach var="post" items="${listPost}">
-            <% if (postLimit < i) {%>
-                <div class="post" style="margin: 0 20px; padding: 10px;" id="${post.userID}">
-                    <div class="post-ids" style="display: flex; flex-direction: row; justify-content: space-between;">
-                        <div>Username: ${post.username} </div>
-                        <div>Post id: ${post.postID} </div>
-                    </div>
-                    <div class="post-body" style="font-size: 20px; margin-top: 20px;"> ${post.text} </div>
-                    <div class="post-tags" style="margin-top: 20px; color: grey;"> ${post.tags} </div>
-                    <div class="post-date" style="margin-top: 10px; font-size: 12px;"> ${post.date} <br> Last Updated: ${post.lastUpdated} </div>
-                    <div style="margin-top: 15px;"><img style="width:200px; height: 250px;" src="data:image/jpeg;base64,${post.imageString}" alt="no attachment"></div>
-                </div>
-                <%postLimit ++;%>
-            <%}%>
-        </c:forEach>
+    <c:forEach var="post" items="${listPost}">
+        <% if (postLimit < i) {%>
+        <div class="post" style="margin: 0 20px; padding: 10px;" id="${post.userID}">
+            <div class="post-ids" style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div>Username: ${post.username} </div>
+                <div>Post id: ${post.postID} </div>
+            </div>
+            <div class="post-body" style="font-size: 20px; margin-top: 20px;"> ${post.text} </div>
+            <div class="post-tags" style="margin-top: 20px; color: grey;"> ${post.tags} </div>
+            <div class="post-date" style="margin-top: 10px; font-size: 12px;"> ${post.date} <br> Last Updated: ${post.lastUpdated} </div>
+            <div style="margin-top: 15px;"><img style="width:200px; height: 250px;" src="data:image/jpeg;base64,${post.imageString}" alt="no attachment"></div>
+        </div>
+        <%postLimit ++;%>
+        <%}%>
+    </c:forEach>
     </table>
 
 
     <form action="MessageBoardServlet" method="post" enctype="multipart/form-data">
-        <label for="message">Enter Text Message</label>
-        <input id="message" type="text" name="message">
-        <label for="tags">Enter #Tags (Separate by space)</label>
-        <input id="tags" type="text" name="tags">
-        <input type="file" name="photo" value="Add attachment">
-        <input type="submit" name="create" value="Create">
+        <div class="post-box">
+            <h1 class="post-box-h1">Post:</h1>
+            <div class="post-box-text">
+                <label for="message">Enter Text Message</label>
+                <input id="message" type="text" name="message">
+            </div>
+
+            <div class="post-box-tag">
+                <label for="tags">Enter #Tags (Separate by space)</label>
+                <input class="post-box-tag-input1" id="tags" type="text" name="tags">
+
+                <input class="post-box-tag-input2" type="file" name="photo" value="Add attachment">
+            </div>
+            <div></div>
+            <div class="post-box-submit">
+                <input class="btn2" type="submit" name="create" value="Create">
+            </div>
+        </div>
 
         <br><br>
 
-        <label for="deletePost">Select Post's ID to delete:</label>
-        <select id="deletePost" name="deletePost">
-            <%! ArrayList<Integer> IDs = msgboard.retrievePostIDs();%>
-            <%
-                for (int id: IDs) {
-            %> <option><%=id%></option> <%
-                }
-            %>
-        </select>
-        <input type="submit" name="delete" value="Delete Post"/>
+        <div class="post-box">
+            <label for="deletePost">Select Post's ID to delete:</label>
+            <select id="deletePost" name="deletePost">
+                <c:forEach var="post" items="${listPost}">
+                    <option>${post.postID}</option>
+                </c:forEach>
+            </select>
+            <input type="submit" name="delete" value="Delete Post"/>
 
-        <br><br>
+            <br><br>
 
-        <label for="updatePost">Select Post's ID to update:</label>
-        <select id="updatePost" name="updatePost">
-            <%! ArrayList<Integer> postIDs = msgboard.retrievePostIDs();%>
-            <%
-                for (int id: postIDs) {
-            %> <option><%=id%></option> <%
-            }
-        %>
-        </select>
-        <label for="updatedMessage">Enter Desired Message Here</label>
-        <input id="updatedMessage" type="text" name="updatedMessage">
-        <label for="updatedTags">Enter Desired tags here</label>
-        <input id="updatedTags" type="text" name="updatedTags">
-        <input type="file" name="updatedAttachment" value="Add attachment">
-        <input type="submit" name="update" value="Update Post"/>
-
+            <label for="updatePost">Select Post's ID to update:</label>
+            <select id="updatePost" name="updatePost">
+                <c:forEach var="post" items="${listPost}">
+                    <option>${post.postID}</option>
+                </c:forEach>
+            </select>
+            <div>
+                <label for="updatedMessage">Enter Desired Message Here</label>
+                <input id="updatedMessage" type="text" name="updatedMessage">
+                <br>
+                <label for="updatedTags">Enter Desired tags here</label>
+                <br>
+                <input id="updatedTags" type="text" name="updatedTags">
+                <input type="file" name="updatedAttachment" value="Add attachment">
+                <input class="btn3" type="submit" name="update" value="Update Post"/>
+            </div>
+        </div>
         <br><br>
 
         <label for="viewRecently">Select number of posts to display: </label>
@@ -126,31 +137,25 @@
         <input type="submit" name="viewRecently" value="View Recent Posts"/>
 
     </form>
-        <br><br>
-        <form action="DownloadServlet" method="post" enctype="multipart/form-data">
-        <button type="button">Download!</button>
-            <input type="submit" name="download1" value="download attachment">
-        </form>
+    <br><br>
+    <form action="DownloadServlet" method="post" enctype="multipart/form-data">
+        <input type="submit" name="download1" value="download attachment">
+    </form>
     <a href="file_list.jsp">View List</a>
-        <button type="button">Clear Chat!</button>
-        <button type="button">???!</button>
-
-
 
 
     <div style="text-align: center;">
         <h2>
             <form action="PostServlet" method="post">
 
-<%--                <a href="/PostServlet">List All Books</a>--%>
+                <%--                <a href="/PostServlet">List All Books</a>--%>
                 <input type="submit" value="list all Posts">
             </form>
         </h2>
     </div>
 
-    <p>Logged in</p>
-    <p><%=message%></p>
-<%--    <p>Session ID = <%=sessionID %></p>--%>
+
+    <%--    <p>Session ID = <%=sessionID %></p>--%>
 
 </main>
 <%--<c:if test="${not empty loggedInUser}">--%>
