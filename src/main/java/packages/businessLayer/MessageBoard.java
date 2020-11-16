@@ -74,9 +74,9 @@ public class MessageBoard {
                 case "searchByDate":
                     return daoObj.searchByDates(fromDate, toDate);
                 case "searchByTags":
-                    return daoObj.searchByTags(tag);
-                case "searchAll":
-                    return daoObj.searchAll(username, fromDate, toDate, tag);
+                    return daoObj.retrieveTags(tag);
+//                case "searchAll":
+//                    return daoObj.searchAll(username, fromDate, toDate, tag);
             }
         }
         return null;

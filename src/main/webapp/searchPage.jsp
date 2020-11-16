@@ -84,8 +84,8 @@
             <label for="searchByDate">Search by Date Range</label>
             <input type="radio" id="searchByTags" name="searchOption" value="searchByTags">
             <label for="searchByTags">Search by Tags</label>
-            <input type="radio" id="searchAll" name="searchOption" value="searchAll">
-            <label for="searchAll">Search for all at the same time</label>
+<%--            <input type="radio" id="searchAll" name="searchOption" value="searchAll">--%>
+<%--            <label for="searchAll">Search for all at the same time</label>--%>
                 <br>
                 <br>
             <span for="updatePost">Sorting filtering option:</span>
