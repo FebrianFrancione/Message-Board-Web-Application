@@ -545,7 +545,7 @@ public class DAO {
         try{
 
             Statement statement = connection.createStatement();
-            ResultSet tagQuery = statement.executeQuery("SELECT postID, tags FROM posts");
+            ResultSet tagQuery = statement.executeQuery("SELECT postID, tags, lastUpdated FROM posts");
 
             while (tagQuery.next()){
 
