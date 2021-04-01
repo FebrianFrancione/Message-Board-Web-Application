@@ -1,5 +1,5 @@
 # SOEN-387-A2: Web-Services and Applications
-Message Board following MVC structure.MySql database used to store data, ranging from users to uploaded files. 
+Message Board application. Follows MVC structure, MySql database used to store data, ranging from users to uploaded files. 
 The files use varying-length binary strings or BLOBS. The application functionalities are as follows: Login/Logout the user, Post manipulations (create,delete,update,search and view),add File attachments, download File attachments and User authentication.
 
 ## Created By
