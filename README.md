@@ -13,7 +13,6 @@ Christophe Bahenduzi, Ramy Elhoufy, Daniel Fakhr, Febrian Francione
 * [Jsp](https://tomcat.apache.org/taglibs/standard/) - Front End Templating with HTML and CSS
 
 ## Documentation
-[CLICK ME Organized and Updated and New Documentations] (Documentation)
 * Class Diagram
 * Sequence Diagram for Download Servlet
 * Use Case Diagram - Message Board
