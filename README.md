@@ -12,7 +12,8 @@ Christophe Bahenduzi, Ramy Elhoufy, Daniel Fakhr, Febrian Francione
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Jsp](https://tomcat.apache.org/taglibs/standard/) - Front End Templating with HTML and CSS
 
-## [CLICK ME Organized and Updated and New Documentations] (Documentation)
+## Documentation
+[CLICK ME Organized and Updated and New Documentations] (Documentation)
 * Class Diagram
 * Sequence Diagram for Download Servlet
 * Use Case Diagram - Message Board
